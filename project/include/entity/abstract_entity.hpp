@@ -11,7 +11,7 @@ using utils::Transform;
 
 class AbstractEntity {
 public:
-    virtual const MaterializedModel& getTexturedModel() const = 0;
+    virtual const MaterializedModel& getMaterializedModel() const = 0;
 
     virtual void setTransform(const Transform& transform) = 0;
     virtual const Transform& getTransform() const = 0;

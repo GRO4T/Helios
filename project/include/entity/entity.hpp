@@ -13,8 +13,8 @@ using utils::Transform;
 class Entity : public AbstractEntity {
 public:
     Entity() {}
-    Entity(MaterializedModelSPtr textured_model, const Transform& transform)
-        : textured_model(textured_model), transform(transform) {}
+    Entity(MaterializedModelPtr materialized_model, const Transform& transform)
+        : materialized_model(std::move(materialized_model)), transform(transform) {}
     Entity(const Entity&) = delete;
     Entity(Entity&& e) = delete;  // we don't use it right now
     /*
@@ -26,7 +26,7 @@ public:
      */
     virtual ~Entity() {}
 
-    MaterializedModel& getTexturedModel() const override { return *textured_model; }
+    MaterializedModel& getMaterializedModel() const override { return *materialized_model; }
 
     void setTransform(const Transform& transform) override { this->transform = transform; }
     const Transform& getTransform() const override { return transform; }
@@ -47,7 +47,7 @@ public:
 
 private:
     Transform transform;
-    MaterializedModelSPtr textured_model;
+    MaterializedModelPtr materialized_model;
 
     std::vector<AbstractEntitySharedPtr> children;
 };

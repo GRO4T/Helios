@@ -40,8 +40,21 @@ endif ()
 include_directories(project/include)
 include_directories(lib/common/include)
 
-add_executable(game-engine project/src/main.cpp)
+add_library(
+        game-engine
+        project/include/camera.hpp
+        project/src/camera.cpp
+        project/include/display_manager.hpp
+        project/src/display_manager.cpp
+        project/include/game_engine.hpp
+        project/src/stb_image.cpp
+        project/include/renderer/master_renderer.hpp
+        project/src/renderer/master_renderer.cpp project/include/model/model.hpp project/include/model/shape.hpp project/include/utils.hpp project/src/model/model.cpp project/src/model/shape.cpp project/include/shader/shader_program.hpp project/src/shader/shader_program.cpp project/src/utils.cpp project/include/shader/entity_shader.hpp)
+
 target_link_libraries(game-engine OpenGL::GL ${LIBS})
+
+add_executable(sandbox project/src/main.cpp)
+target_link_libraries(sandbox game-engine)
 
 # copy /res folder
 add_custom_command(TARGET game-engine POST_BUILD

@@ -1,0 +1,13 @@
+#pragma once
+
+#include "shader_program.hpp"
+
+namespace game_engine {
+
+class BasicShader : public ShaderProgram {
+public:
+    BasicShader()
+        : ShaderProgram("res/shaders/entity_shader.vert", "res/shaders/entity_shader.frag") {}
+};
+
+}  // namespace game_engine

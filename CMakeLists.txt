@@ -1,0 +1,55 @@
+cmake_minimum_required(VERSION 3.3)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_BUILD_TYPE Debug)
+# set(CMAKE_BUILD_TYPE Release)
+
+project(game-engine)
+
+if (UNIX)
+    if (POLICY CMP0072)
+        cmake_policy(SET CMP0072 NEW)
+    endif ()
+    find_package(OpenGL REQUIRED)
+    set(LIBS glfw GLEW)
+    message(STATUS "Compiling for Linux 64bit")
+elseif (WIN32)
+    add_link_options(/NODEFAULTLIB:LIBCMT) # https://stackoverflow.com/questions/3007312/resolving-lnk4098-defaultlib-msvcrt-conflicts-with
+
+    find_package(OpenGL REQUIRED)
+
+    if (NOT CMAKE_CL_64)
+        message(STATUS "Cannot compile for Windows 32bit!")
+    else ()
+        include_directories(lib/win/64bit/include)
+
+        link_directories(lib/win/64bit)
+
+        if (${MSVC_TOOLSET_VERSION} EQUAL 141)      #= VS 2017 (15.0)
+            link_directories(lib/win/64bit/glfw/lib-vc2017)
+        endif ()
+        if (${MSVC_TOOLSET_VERSION} EQUAL 142)      #= VS 2019
+            link_directories(lib/win/64bit/glfw/lib-vc2019)
+        endif ()
+
+        message(STATUS "Compiling for Windows 64bit")
+    endif ()
+    set(LIBS glfw3 glew32s)
+endif ()
+
+include_directories(project/include)
+include_directories(lib/common/include)
+
+add_executable(game-engine project/src/main.cpp)
+target_link_libraries(game-engine OpenGL::GL ${LIBS})
+
+# copy /res folder
+add_custom_command(TARGET game-engine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/res
+        $<TARGET_FILE_DIR:game-engine>/res
+        )
+
+# copy /res to /build (for running from Visual Studio)
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/res ${CMAKE_SOURCE_DIR}/build/res)
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/res ${CMAKE_SOURCE_DIR}/build/tests/res)

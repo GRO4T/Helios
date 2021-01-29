@@ -4,9 +4,9 @@
 
 namespace game_engine {
 
-class BasicShader : public ShaderProgram {
+class EntityShader : public ShaderProgram {
 public:
-    BasicShader()
+    EntityShader()
         : ShaderProgram("res/shaders/entity_shader.vert", "res/shaders/entity_shader.frag") {}
 };
 

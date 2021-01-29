@@ -24,12 +24,6 @@ public:
         return success;
     }
     void run() {
-        /*
-         * Needs refactoring
-         */
-        glViewport(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
-
-
         while (!display_manager.windowShouldClose()) {
             double delta_time = display_manager.getDeltaTime();
             display_manager.handleEvents();
@@ -54,10 +48,6 @@ private:
 
     Camera camera;
     MasterRenderer renderer;
-
-    /*
-     * Needs refactoring
-     */
 };
 
 }

@@ -1,19 +1,20 @@
-#include "model/shape.hpp"
+#include "model/primitive.hpp"
 
 #include <cmath>
 
 // clang-format off
 
 namespace game_engine {
+namespace primitive {
 
 static const double PI = 3.14159265;
 
-Shape cube(GLfloat s) {
+ModelData cube(float s) {
     return cuboid(s, s, s);
 }
 
-Shape cuboid(GLfloat w, GLfloat h, GLfloat d) {
-    return Shape({
+ModelData cuboid(float w, float h, float d) {
+    return ModelData({
                      w * -0.5f, h *  0.5f, d *  0.5f,   0.0f, 0.0f,    0.0f,  0.0f,  1.0f,
                      w * -0.5f, h * -0.5f, d *  0.5f,   0.0f, 1.0f,    0.0f,  0.0f,  1.0f,
                      w *  0.5f, h *  0.5f, d *  0.5f,   1.0f, 0.0f,    0.0f,  0.0f,  1.0f,
@@ -58,34 +59,34 @@ Shape cuboid(GLfloat w, GLfloat h, GLfloat d) {
                  });
 }
 
-Shape cylinder(GLfloat diameter, GLfloat height, unsigned int sides) {
+ModelData cylinder(float diameter, float height, unsigned int sides) {
     if (sides < 3) sides = 3;
-    Shape vertices;
+    ModelData vertices;
     vertices.reserve(8 * 12 * sides);
     for (unsigned int i = 0; i < sides; ++i) {
-        GLfloat r = i / static_cast<GLfloat>(sides);
-        GLfloat nr = (i + 1) / static_cast<GLfloat>(sides);
-        GLfloat norm_x = static_cast<GLfloat>(sin(r * 2 * PI));
-        GLfloat nnorm_x = static_cast<GLfloat>(sin(nr * 2 * PI));
-        GLfloat x = 0.5f * diameter * norm_x;
-        GLfloat nx = 0.5f * diameter * nnorm_x;
-        GLfloat ly = -0.5f * height;
-        GLfloat hy = 0.5f * height;
-        GLfloat norm_z = static_cast<GLfloat>(cos(r * 2 * PI));
-        GLfloat nnorm_z = static_cast<GLfloat>(cos(nr * 2 * PI));
-        GLfloat z = 0.5f * diameter * norm_z;
-        GLfloat nz = 0.5f * diameter * nnorm_z;
+        float r = i / static_cast<float>(sides);
+        float nr = (i + 1) / static_cast<float>(sides);
+        float norm_x = static_cast<float>(sin(r * 2 * PI));
+        float nnorm_x = static_cast<float>(sin(nr * 2 * PI));
+        float x = 0.5f * diameter * norm_x;
+        float nx = 0.5f * diameter * nnorm_x;
+        float ly = -0.5f * height;
+        float hy = 0.5f * height;
+        float norm_z = static_cast<float>(cos(r * 2 * PI));
+        float nnorm_z = static_cast<float>(cos(nr * 2 * PI));
+        float z = 0.5f * diameter * norm_z;
+        float nz = 0.5f * diameter * nnorm_z;
 
-        GLfloat u = r;
-        GLfloat nu = nr;
-        GLfloat tu = 0.25f + 0.25f * static_cast<GLfloat>(sin(2 * PI * r));
-        GLfloat ntu = 0.25f + 0.25f * static_cast<GLfloat>(sin(2 * PI * nr));
-        GLfloat bu = 0.5f + tu;
-        GLfloat nbu = 0.5f + ntu;
-        GLfloat v = 0.25f + 0.25f * static_cast<GLfloat>(cos(2 * PI * r));
-        GLfloat nv = 0.25f + 0.25f * static_cast<GLfloat>(cos(2 * PI * nr));
+        float u = r;
+        float nu = nr;
+        float tu = 0.25f + 0.25f * static_cast<float>(sin(2 * PI * r));
+        float ntu = 0.25f + 0.25f * static_cast<float>(sin(2 * PI * nr));
+        float bu = 0.5f + tu;
+        float nbu = 0.5f + ntu;
+        float v = 0.25f + 0.25f * static_cast<float>(cos(2 * PI * r));
+        float nv = 0.25f + 0.25f * static_cast<float>(cos(2 * PI * nr));
 
-        GLfloat slice[8 * 12] = {
+        float slice[8 * 12] = {
             // side rectangle
             x, hy,   z,         u,  0.5f,      norm_x,  0.0f,  norm_z,
             x, ly,   z,         u,  1.0f,      norm_x,  0.0f,  norm_z,
@@ -107,39 +108,39 @@ Shape cylinder(GLfloat diameter, GLfloat height, unsigned int sides) {
     return vertices;
 }
 
-Shape sphere(GLfloat diameter, unsigned int sides) {
+ModelData sphere(float diameter, unsigned int sides) {
     if (sides < 3) sides = 3;
-    Shape vertices;
+    ModelData vertices;
     vertices.reserve(8 * 6 * sides * sides);
     for (unsigned int i = 0; i < sides; ++i) {
-        GLfloat r = i / static_cast<GLfloat>(sides);
-        GLfloat nr = (i + 1) / static_cast<GLfloat>(sides);
+        float r = i / static_cast<float>(sides);
+        float nr = (i + 1) / static_cast<float>(sides);
         for (unsigned int u = 0; u < sides; ++u) {
-            GLfloat d = u / static_cast<GLfloat>(sides);
-            GLfloat nd = (u + 1) / static_cast<GLfloat>(sides);
-            GLfloat hrad = 0.5f * diameter * static_cast<GLfloat>(sin(d * PI));
-            GLfloat lrad = static_cast<GLfloat>(0.5) * diameter * static_cast<GLfloat>(sin(nd * PI));
-            GLfloat hx = hrad * static_cast<GLfloat>(sin(r * 2 * PI));
-            GLfloat lx = lrad * static_cast<GLfloat>(sin(r * 2 * PI));
-            GLfloat nhx = hrad * static_cast<GLfloat>(sin(nr * 2 * PI));
-            GLfloat nlx = lrad * static_cast<GLfloat>(sin(nr * 2 * PI));
-            GLfloat y = 0.5f * diameter * static_cast<GLfloat>(cos(d * PI));
-            GLfloat ny = 0.5f * diameter * static_cast<GLfloat>(cos(nd * PI));
-            GLfloat hz = hrad * static_cast<GLfloat>(cos(r * 2 * PI));
-            GLfloat lz = lrad * static_cast<GLfloat>(cos(r * 2 * PI));
-            GLfloat nhz = hrad * static_cast<GLfloat>(cos(nr * 2 * PI));
-            GLfloat nlz = lrad * static_cast<GLfloat>(cos(nr * 2 * PI));
+            float d = u / static_cast<float>(sides);
+            float nd = (u + 1) / static_cast<float>(sides);
+            float hrad = 0.5f * diameter * static_cast<float>(sin(d * PI));
+            float lrad = static_cast<float>(0.5) * diameter * static_cast<float>(sin(nd * PI));
+            float hx = hrad * static_cast<float>(sin(r * 2 * PI));
+            float lx = lrad * static_cast<float>(sin(r * 2 * PI));
+            float nhx = hrad * static_cast<float>(sin(nr * 2 * PI));
+            float nlx = lrad * static_cast<float>(sin(nr * 2 * PI));
+            float y = 0.5f * diameter * static_cast<float>(cos(d * PI));
+            float ny = 0.5f * diameter * static_cast<float>(cos(nd * PI));
+            float hz = hrad * static_cast<float>(cos(r * 2 * PI));
+            float lz = lrad * static_cast<float>(cos(r * 2 * PI));
+            float nhz = hrad * static_cast<float>(cos(nr * 2 * PI));
+            float nlz = lrad * static_cast<float>(cos(nr * 2 * PI));
 
-            GLfloat lny = static_cast<GLfloat>(cos(d * PI));
-            GLfloat nlny =  static_cast<GLfloat>(cos(nd * PI));
-            GLfloat xzs = static_cast<GLfloat>(sin(d * PI));
-            GLfloat nxzs = static_cast<GLfloat>(sin(nd * PI));
-            GLfloat lnx = static_cast<GLfloat>(sin(r * 2 * PI));
-            GLfloat nlnx = static_cast<GLfloat>(sin(nr * 2 * PI));
-            GLfloat lnz = static_cast<GLfloat>(cos(r * 2 * PI));
-            GLfloat nlnz = static_cast<GLfloat>(cos(nr * 2 * PI));
+            float lny = static_cast<float>(cos(d * PI));
+            float nlny =  static_cast<float>(cos(nd * PI));
+            float xzs = static_cast<float>(sin(d * PI));
+            float nxzs = static_cast<float>(sin(nd * PI));
+            float lnx = static_cast<float>(sin(r * 2 * PI));
+            float nlnx = static_cast<float>(sin(nr * 2 * PI));
+            float lnz = static_cast<float>(cos(r * 2 * PI));
+            float nlnz = static_cast<float>(cos(nr * 2 * PI));
 
-            GLfloat slice[8 * 6] = {
+            float slice[8 * 6] = {
                 hx,  y,  hz,      r,  d,     lnx *  xzs,  lny,  lnz *  xzs,
                 lx, ny,  lz,      r, nd,     lnx * nxzs, nlny,  lnz * nxzs,
                 nhx,  y, nhz,     nr,  d,    nlnx *  xzs,  lny, nlnz *  xzs,
@@ -154,44 +155,44 @@ Shape sphere(GLfloat diameter, unsigned int sides) {
     return vertices;
 }
 
-Shape cone(GLfloat diameter, GLfloat height, unsigned int sides) {
+ModelData cone(float diameter, float height, unsigned int sides) {
     if (sides < 3) sides = 3;
-    Shape vertices;
+    ModelData vertices;
 
-    GLfloat clen = static_cast<GLfloat>(sqrt(diameter * diameter / 4.0 + height * height));
-    GLfloat lny = static_cast<GLfloat>((diameter / 2.0) / clen);
-    GLfloat xzs = static_cast<GLfloat>(height / clen);
+    float clen = static_cast<float>(sqrt(diameter * diameter / 4.0 + height * height));
+    float lny = static_cast<float>((diameter / 2.0) / clen);
+    float xzs = static_cast<float>(height / clen);
 
     vertices.reserve(8 * 6 * sides);
     for (unsigned int i = 0; i < sides; ++i) {
-        GLfloat r = i / static_cast<GLfloat>(sides);
-        GLfloat nr = (i + 1) / static_cast<GLfloat>(sides);
-        GLfloat norm_x = static_cast<GLfloat>(sin(r * 2 * PI));
-        GLfloat nnorm_x = static_cast<GLfloat>(sin(nr * 2 * PI));
-        GLfloat x = 0.5f * diameter * norm_x;
-        GLfloat nx = 0.5f * diameter * nnorm_x;
-        GLfloat ly = -0.5f * height;
-        GLfloat hy = 0.5f * height;
-        GLfloat norm_z = static_cast<GLfloat>(cos(r * 2 * PI));
-        GLfloat nnorm_z = static_cast<GLfloat>(cos(nr * 2 * PI));
-        GLfloat z = 0.5f * diameter * norm_z;
-        GLfloat nz = 0.5f * diameter * nnorm_z;
+        float r = i / static_cast<float>(sides);
+        float nr = (i + 1) / static_cast<float>(sides);
+        float norm_x = static_cast<float>(sin(r * 2 * PI));
+        float nnorm_x = static_cast<float>(sin(nr * 2 * PI));
+        float x = 0.5f * diameter * norm_x;
+        float nx = 0.5f * diameter * nnorm_x;
+        float ly = -0.5f * height;
+        float hy = 0.5f * height;
+        float norm_z = static_cast<float>(cos(r * 2 * PI));
+        float nnorm_z = static_cast<float>(cos(nr * 2 * PI));
+        float z = 0.5f * diameter * norm_z;
+        float nz = 0.5f * diameter * nnorm_z;
 
-        GLfloat u = 0.5f + 0.25f * static_cast<GLfloat>(sin(2 * PI * r));
-        GLfloat nu = 0.5f + 0.25f * static_cast<GLfloat>(sin(2 * PI * nr));
-        GLfloat tv = 0.25f + 0.25f * static_cast<GLfloat>(cos(2 * PI * r));
-        GLfloat ntv = 0.25f + 0.25f * static_cast<GLfloat>(cos(2 * PI * nr));
-        GLfloat bv = 0.5f + tv;
-        GLfloat nbv = 0.5f + ntv;
+        float u = 0.5f + 0.25f * static_cast<float>(sin(2 * PI * r));
+        float nu = 0.5f + 0.25f * static_cast<float>(sin(2 * PI * nr));
+        float tv = 0.25f + 0.25f * static_cast<float>(cos(2 * PI * r));
+        float ntv = 0.25f + 0.25f * static_cast<float>(cos(2 * PI * nr));
+        float bv = 0.5f + tv;
+        float nbv = 0.5f + ntv;
 
-        GLfloat lnx = static_cast<GLfloat>(sin(r * 2 * PI));
-        GLfloat mlnx = static_cast<GLfloat>(sin(((r + nr) / 2.0f) * 2 * PI));
-        GLfloat nlnx = static_cast<GLfloat>(sin(nr * 2 * PI));
-        GLfloat lnz = static_cast<GLfloat>(cos(r * 2 * PI));
-        GLfloat mlnz = static_cast<GLfloat>(cos(((r + nr) / 2.0f) * 2 * PI));
-        GLfloat nlnz = static_cast<GLfloat>(cos(nr * 2 * PI));
+        float lnx = static_cast<float>(sin(r * 2 * PI));
+        float mlnx = static_cast<float>(sin(((r + nr) / 2.0f) * 2 * PI));
+        float nlnx = static_cast<float>(sin(nr * 2 * PI));
+        float lnz = static_cast<float>(cos(r * 2 * PI));
+        float mlnz = static_cast<float>(cos(((r + nr) / 2.0f) * 2 * PI));
+        float nlnz = static_cast<float>(cos(nr * 2 * PI));
 
-        GLfloat slice[8 * 6] = {
+        float slice[8 * 6] = {
             0.0f, hy, 0.0f,    0.5f, 0.25f,    mlnx * xzs,   lny, mlnz * xzs,
             x, ly,    z,       u,    tv,     lnx * xzs,   lny,  lnz * xzs,
             nx, ly,   nz,      nu,   ntv,    nlnx * xzs,   lny, nlnz * xzs,
@@ -205,23 +206,23 @@ Shape cone(GLfloat diameter, GLfloat height, unsigned int sides) {
     return vertices;
 }
 
-Shape plane(GLfloat w, GLfloat h, unsigned int w_segments, unsigned int h_segments) {
+ModelData plane(float w, float h, unsigned int w_segments, unsigned int h_segments) {
     if (w_segments < 1) w_segments = 1;
     if (h_segments < 1) h_segments = 1;
-    Shape vertices;
+    ModelData vertices;
     vertices.reserve(8 * 6 * w_segments * h_segments);
     for (unsigned int i = 0; i < w_segments; ++i) {
         for (unsigned int u = 0; u < h_segments; ++u) {
-            GLfloat x = i / static_cast<GLfloat>(w_segments);
-            GLfloat nx = (i + 1) / static_cast<GLfloat>(w_segments);
-            GLfloat y = u / static_cast<GLfloat>(h_segments);
-            GLfloat ny = (u + 1) / static_cast<GLfloat>(h_segments);
+            float x = i / static_cast<float>(w_segments);
+            float nx = (i + 1) / static_cast<float>(w_segments);
+            float y = u / static_cast<float>(h_segments);
+            float ny = (u + 1) / static_cast<float>(h_segments);
             x = (-1.0f + 2 * x);
             nx = (-1.0f + 2 * nx);
             y = (-1.0f + 2 * y);
             ny = (-1.0f + 2 * ny);
 
-            GLfloat slice[8 * 6] = {
+            float slice[8 * 6] = {
                 w *  x, h *  y, 0.0f,   0.0f, 0.0f,    0.0f,  0.0f,  1.0f,
                 w *  x, h * ny, 0.0f,   0.0f, 1.0f,    0.0f,  0.0f,  1.0f,
                 w * nx, h *  y, 0.0f,   1.0f, 0.0f,    0.0f,  0.0f,  1.0f,
@@ -235,13 +236,13 @@ Shape plane(GLfloat w, GLfloat h, unsigned int w_segments, unsigned int h_segmen
     return vertices;
 }
 
-Shape cubemap() {
+ModelData cubemap() {
     return cuboid(2.0f, 2.0f, 2.0f);
 }
 
 // clang-format on
 
-void invert_normals(Shape &shape) {
+void invert_normals(ModelData &shape) {
     for (int i = 0; i < shape.size(); ++i) {
         if (i % 8 >= 5) {
             shape[i] = -shape[i];
@@ -249,4 +250,5 @@ void invert_normals(Shape &shape) {
     }
 }
 
+}  // namespace primitive
 }  // namespace game_engine

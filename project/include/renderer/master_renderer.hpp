@@ -14,7 +14,7 @@
 //#include "water_renderer.hpp"
 
 #include <model/model.hpp>
-#include <model/shape.hpp>
+#include <model/primitive.hpp>
 #include <shader/entity_shader.hpp>
 
 #include "camera.hpp"
@@ -47,8 +47,7 @@ public:
     // EntityRenderer getEntityRenderer() { return entity_renderer; }
 
 private:
-
-    BasicShader shader;
+    EntityShader shader;
 
     static glm::mat4 projection_matrix;
 

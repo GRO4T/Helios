@@ -1,5 +1,6 @@
 #include "model/model.hpp"
-#include "model/shape.hpp"
+
+#include "model/primitive.hpp"
 
 namespace game_engine {
 
@@ -28,9 +29,9 @@ void Model::load(GLfloat vertices[], int v_count) {
     vertex_count = v_count;
 }
 
-void Model::load(Shape &shape) { load(shape.data(), static_cast<int>(shape.size())); }
+void Model::load(ModelData &shape) { load(shape.data(), static_cast<int>(shape.size())); }
 
-void Model::load(Shape &&shape) { load(shape.data(), static_cast<int>(shape.size())); }
+void Model::load(ModelData &&shape) { load(shape.data(), static_cast<int>(shape.size())); }
 
 void IndexedModel::load(std::vector<GLfloat> &vertices, std::vector<GLfloat> &normals,
                         std::vector<GLfloat> &tex_coords, std::vector<GLuint> &indices) {

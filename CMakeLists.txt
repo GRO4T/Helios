@@ -49,7 +49,7 @@ add_library(
         project/include/game_engine.hpp
         project/src/stb_image.cpp
         project/include/renderer/master_renderer.hpp
-        project/src/renderer/master_renderer.cpp project/include/model/model.hpp project/include/model/shape.hpp project/include/utils.hpp project/src/model/model.cpp project/src/model/shape.cpp project/include/shader/shader_program.hpp project/src/shader/shader_program.cpp project/src/utils.cpp project/include/shader/entity_shader.hpp)
+        project/src/renderer/master_renderer.cpp project/include/model/model.hpp project/include/model/primitive.hpp project/include/utils.hpp project/src/model/model.cpp project/src/model/primitive.cpp project/include/shader/shader_program.hpp project/src/shader/shader_program.cpp project/src/utils.cpp project/include/shader/entity_shader.hpp project/include/model/materialized_model.hpp project/include/texture/texture.hpp project/include/texture/texture_manager.hpp project/include/model/material.hpp project/src/texture/texture.cpp project/src/texture/texture_manager.cpp project/include/entity/entity.hpp project/include/entity/abstract_entity.hpp)
 
 target_link_libraries(game-engine OpenGL::GL ${LIBS})
 

@@ -23,7 +23,7 @@ void DisplayManager::init() {
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 }
 void DisplayManager::createDisplay(int width, int height) {
-    window = glfwCreateWindow(width, height, "GKOM - OpenGL 05", nullptr, nullptr);
+    window = glfwCreateWindow(width, height, "Game Engine", nullptr, nullptr);
     if (window == nullptr) throw std::runtime_error("GLFW window not created");
     glfwMakeContextCurrent(window);
     glfwSetCursorPosCallback(window, cursorPositionCallback);
@@ -34,7 +34,9 @@ void DisplayManager::createDisplay(int width, int height) {
     if (glewInit() != GLEW_OK) {
         throw std::runtime_error("GLEW Initialization failed");
     }
+    glViewport(0, 0, width, height);
 }
+
 void DisplayManager::handleEvents() {
     if (isKeyPressed(GLFW_KEY_ESCAPE)) {
         glfwSetWindowShouldClose(window, GL_TRUE);
@@ -47,8 +49,8 @@ void DisplayManager::update() {
     delta_time = now - last_update;
     last_update = now;
     // std::cout << delta_time << "s" << std::endl;
-    // std::cout << "FPS: " << 1000.0f / delta_time << std::endl;
-    // std::cout << "mouse sensitivity: " << mouse_sensitivity_x << std::endl;
+     //std::cout << "FPS: " << 1000.0f / delta_time << std::endl;
+     //std::cout << "mouse sensitivity: " << mouse_sensitivity_x << std::endl;
     glfwSwapBuffers(window);
     mouse_dx = mouse_dy = 0;
     scroll_x = scroll_y = 0;

@@ -11,9 +11,10 @@ EntityRenderer::EntityRenderer(const glm::mat4& projection_matrix) {
     shader.setProjectionMatrix(projection_matrix);
 }
 
-void EntityRenderer::render(std::vector<Entity*>& entities, const Camera& camera) {
+void EntityRenderer::render(std::vector<Entity*>& entities, const Camera& camera, std::vector<Light*>& lights) {
     shader.use();
     shader.setViewMatrix(camera);
+
 
     for (auto& entity : entities) {
         const auto& model = entity->getMaterializedModel().getModel();
@@ -21,6 +22,12 @@ void EntityRenderer::render(std::vector<Entity*>& entities, const Camera& camera
         utils::createTransformMatrix(transform_matrix, entity->getTransform());
         shader.setTransformationMatrix(transform_matrix);
         prepareInstance(*entity);
+
+        // set up lights
+        for (const auto& light : lights) {
+            shader.setLight("light", *light);
+        }
+
         model.draw();
         unbind(model);
         renderChildren(*entity, transform_matrix);

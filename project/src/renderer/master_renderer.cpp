@@ -17,7 +17,7 @@ void MasterRenderer::render(const Camera& camera, float time) {
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    entity_renderer.render(entities, camera);
+    entity_renderer.render(entities, camera, lights);
     light_renderer.render(lights, camera);
 }
 

@@ -10,7 +10,8 @@ public:
     GameEngine()
         : display_manager(DisplayManager::getInstance()),
           texture_manager(TextureManager::getInstance()),
-          renderer() {}
+          renderer(),
+          camera(glm::vec3(0, 4, -10), 20, 180) {}
 
     static bool init() {
         bool success = true;
@@ -31,7 +32,7 @@ public:
         model->load(primitive::cube(1.0f));
         MaterialSPtr material = std::make_shared<Material>(
             glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.5f, 0.5f, 0.5f),
-            32.0f, 1.0f, &texture_manager.getTexture("res/container.jpg"));
+            glm::vec4(0.75f, 0.0f, 0.0f, 1.0f));
         MaterializedModelPtr materialized_model =
             std::make_unique<MaterializedModel>(std::move(model), material);
         Transform t;
@@ -53,18 +54,19 @@ public:
         renderer.registerObject(plane.get());
         renderer.registerObject(cube.get());
 
-        //lights
+        // lights
         ModelPtr model3 = std::make_unique<Model>();
         model3->load(primitive::cube(1.0f));
         Transform t3;
         t3.position.y = 0.5f;
         t3.position.z = 2.0f;
-        LightPtr light = std::make_unique<Light>(std::move(model3), t3, glm::vec3(1, 1, 1), glm::vec3(1, 1, 1));
+        LightPtr light = std::make_unique<Light>(std::move(model3), t3, PhongLight(0.2f, 0, 0));
 
         renderer.registerObject(light.get());
 
         while (!display_manager.windowShouldClose()) {
             double delta_time = display_manager.getDeltaTime();
+            light->setAmbient(light->getAmbient() + 0.002f);
             display_manager.handleEvents();
             updateCamera();
             renderer.render(camera, delta_time);

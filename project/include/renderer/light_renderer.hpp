@@ -33,8 +33,6 @@ private:
     void unbind(const Model& model) { glBindVertexArray(0); }
     void prepareInstance(const Light& light) {
         glBindVertexArray(light.getModel().getVao());
-        shader.setVec3("object_color", light.getObjectColor());
-        shader.setVec3("light_color", light.getLightColor());
     }
 
     LightShader shader;

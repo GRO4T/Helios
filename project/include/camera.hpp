@@ -5,7 +5,7 @@ namespace game_engine {
 
 class Camera {
 public:
-    Camera() : position(0, 0, -10) {}
+    Camera() {}
     Camera(const glm::vec3& position, float pitch, float yaw)
         : position(position), pitch(pitch), yaw(yaw) {}
     void move();

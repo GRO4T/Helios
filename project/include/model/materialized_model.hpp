@@ -15,7 +15,7 @@ public:
     MaterializedModel(ModelPtr model, MaterialSPtr material)
         : model(std::move(model)), material(material) {}
     ~MaterializedModel() {}
-    const Model& getModel() { return *model; }
+    const Model& getModel() const { return *model; }
     Material& getMaterial() const { return *material; }
 
 private:

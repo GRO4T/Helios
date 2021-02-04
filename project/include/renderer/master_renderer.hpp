@@ -20,13 +20,14 @@
 
 #include "camera.hpp"
 #include "entity_renderer.hpp"
+#include "light_renderer.hpp"
 #include "opengl_all.hpp"
 
 namespace game_engine {
 
 class MasterRenderer {
 public:
-    MasterRenderer() : entity_renderer(projection_matrix) {}
+    MasterRenderer() : entity_renderer(projection_matrix), light_renderer(projection_matrix) {}
     /*
     terrain_renderer(projection_matrix),
     skybox_renderer(projection_matrix),
@@ -37,7 +38,8 @@ public:
                                           float display_height);
 
     // void registerObject(TerrainSharedPtr terrain) { terrains.push_back(terrain); }
-    void registerObject(Entity* entity) { entities.push_back(entity); }
+    void registerObject(Entity* object) { entities.push_back(object); }
+    void registerObject(Light* object) { lights.push_back(object); }
     /*
     void registerForShadows(EntitySPtr entity) { entity_renderer.registerForShadows(entity); }
     void registerObject(CubemapSharedPtr cubemap) { this->skybox = cubemap; }
@@ -52,8 +54,10 @@ private:
     static glm::mat4 projection_matrix;
 
     EntityRenderer entity_renderer;
+    LightRenderer light_renderer;
 
     std::vector<Entity*> entities;
+    std::vector<Light*> lights;
 
     /*
     std::vector<TerrainSharedPtr> terrains;

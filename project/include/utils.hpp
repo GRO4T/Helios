@@ -70,8 +70,10 @@ void createViewMatrix(glm::mat4 &view, const Camera &camera);
 void createTransformMatrix(glm::mat4 &transformation_matrix, const Transform &object_transform);
 
 std::ostream &operator<<(std::ostream &os, const glm::mat4 &mx);
+std::ostream &operator<<(std::ostream &os, const glm::vec4 &vec);
+std::ostream &operator<<(std::ostream &os, const glm::vec3 &vec);
 
-glm::vec3 vec3_lerp(const glm::vec3 &a, const glm::vec3 &b, float ratio);
+glm::vec3 lerp(const glm::vec3 &a, const glm::vec3 &b, float ratio);
 
 glm::vec3 rotate_x(const glm::vec3 &v, float angle);
 glm::vec3 rotate_y(const glm::vec3 &v, float angle);

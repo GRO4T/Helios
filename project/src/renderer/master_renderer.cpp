@@ -18,14 +18,7 @@ void MasterRenderer::render(const Camera& camera, float time) {
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     entity_renderer.render(entities, camera);
-    /*
-    terrain_renderer.render(terrains, camera);
-    skybox_renderer.render(skybox, camera);
-    water_renderer.render(water, camera, time);
-
-    entities.clear();
-    terrains.clear();
-     */
+    light_renderer.render(lights, camera);
 }
 
 }  // namespace game_engine

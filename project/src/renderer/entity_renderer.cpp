@@ -9,8 +9,6 @@ using utils::Transform;
 EntityRenderer::EntityRenderer(const glm::mat4& projection_matrix) {
     shader.use();
     shader.setProjectionMatrix(projection_matrix);
-    //shader.setInt("texture0", 0);
-    //shader.setInt("Texture1", 1);
 }
 
 void EntityRenderer::render(std::vector<Entity*>& entities, const Camera& camera) {
@@ -45,12 +43,10 @@ void EntityRenderer::renderChildren(Entity& parent, glm::mat4 combined_transform
 void EntityRenderer::unbind(const Model& model) { glBindVertexArray(0); }
 
 void EntityRenderer::prepareInstance(const Entity& entity) {
-    const auto& texture = entity.getMaterializedModel().getMaterial().texture;
-    glBindVertexArray(entity.getMaterializedModel().getModel().getVao());
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture.getTexture());
-    glUniform1i(glGetUniformLocation(shader.getProgramID(), texture.getTextureUnitShaderName()),
-                texture.getTextureUnitShaderID());
+    auto& materialized_model = entity.getMaterializedModel();
+    const auto& material = materialized_model.getMaterial();
+    glBindVertexArray(materialized_model.getModel().getVao());
+    shader.setMaterial("material", material);
 }
 
 }

@@ -98,9 +98,19 @@ void createTransformMatrix(glm::mat4 &transformation_matrix, const Transform &ob
 
 std::ostream &operator<<(std::ostream &os, const glm::mat4 &mx) {
     for (int Row = 0; Row < 4; ++Row) {
-        for (int Col = 0; Col < 4; ++Col) std::cout << mx[Row][Col] << ' ';
-        std::cout << std::endl;
+        for (int Col = 0; Col < 4; ++Col) os << mx[Row][Col] << ' ';
+        os << std::endl;
     }
+    return os;
+}
+
+std::ostream &utils::operator<<(std::ostream &os, const glm::vec4 &vec) {
+    os << vec.r << " " << vec.g << " " << vec.b << " " << vec.a;
+    return os;
+}
+
+std::ostream &utils::operator<<(std::ostream &os, const glm::vec3 &vec) {
+    os << vec.x << " " << vec.y << " " << vec.z;
     return os;
 }
 
@@ -111,7 +121,7 @@ void Image::load(const std::string &path) {
     data = std::move(tmp);
 }
 
-glm::vec3 vec3_lerp(const glm::vec3 &a, const glm::vec3 &b, float ratio) {
+glm::vec3 lerp(const glm::vec3 &a, const glm::vec3 &b, float ratio) {
     ratio = std::max(std::min(ratio, 1.0f), 0.0f);
     float rat_a = 1 - ratio;
     return glm::vec3(a.x * rat_a + b.x * ratio, a.y * rat_a + b.y * ratio,

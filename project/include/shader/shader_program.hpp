@@ -8,7 +8,6 @@
 namespace game_engine {
 
 class ShaderProgram {
-    GLuint program_id;  // The program ID
 public:
     // Constructor reads and builds the shader
     ShaderProgram(const GLchar *vertex_path, const GLchar *fragment_path);
@@ -25,16 +24,16 @@ public:
     void setProjectionMatrix(const glm::mat4 &projection_matrix) const;
     void setTransformationMatrix(const glm::mat4 &transformation_matrix) const;
 
-    // Use the program
     void use() const { glUseProgram(getProgramID()); }
-
-    // returns program ID
     GLuint getProgramID() const { return program_id; }
 
 protected:
     void bindAttribute(int attrib_number, const std::string &attrib_name) const {
         glBindAttribLocation(program_id, attrib_number, attrib_name.c_str());
     }
+
+private:
+    GLuint program_id;
 };
 
 }  // namespace game_engine

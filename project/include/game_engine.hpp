@@ -7,7 +7,10 @@ namespace game_engine {
 
 class GameEngine {
 public:
-    GameEngine() : display_manager(DisplayManager::getInstance()), renderer() {}
+    GameEngine()
+        : display_manager(DisplayManager::getInstance()),
+          texture_manager(TextureManager::getInstance()),
+          renderer() {}
 
     static bool init() {
         bool success = true;
@@ -23,22 +26,24 @@ public:
         return success;
     }
     void run() {
+        // cube
         ModelPtr model = std::make_unique<Model>();
         model->load(primitive::cube(1.0f));
         MaterialSPtr material = std::make_shared<Material>(
             glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.5f, 0.5f, 0.5f),
-            32.0f, 1.0f, TextureManager::getInstance().getTexture("res/container.jpg"));
+            32.0f, 1.0f, &texture_manager.getTexture("res/container.jpg"));
         MaterializedModelPtr materialized_model =
             std::make_unique<MaterializedModel>(std::move(model), material);
         Transform t;
         t.position.y = 0.5f;
         EntityPtr cube = std::make_unique<Entity>(std::move(materialized_model), t);
 
+        // plane
         ModelPtr model2 = std::make_unique<Model>();
-        model2->load(primitive::plane(200, 200, 4, 4));
+        model2->load(primitive::plane(20, 20, 4, 4));
         MaterialSPtr material2 = std::make_shared<Material>(
             glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.5f, 0.5f, 0.5f),
-            32.0f, 1.0f, TextureManager::getInstance().getTexture("res/metal.jpg"));
+            32.0f, 1.0f, &texture_manager.getTexture("res/metal.jpg"));
         MaterializedModelPtr materialized_model2 =
             std::make_unique<MaterializedModel>(std::move(model2), material2);
         Transform t2;
@@ -47,6 +52,16 @@ public:
 
         renderer.registerObject(plane.get());
         renderer.registerObject(cube.get());
+
+        //lights
+        ModelPtr model3 = std::make_unique<Model>();
+        model3->load(primitive::cube(1.0f));
+        Transform t3;
+        t3.position.y = 0.5f;
+        t3.position.z = 2.0f;
+        LightPtr light = std::make_unique<Light>(std::move(model3), t3, glm::vec3(1, 1, 1), glm::vec3(1, 1, 1));
+
+        renderer.registerObject(light.get());
 
         while (!display_manager.windowShouldClose()) {
             double delta_time = display_manager.getDeltaTime();
@@ -70,6 +85,7 @@ private:
     }
 
     DisplayManager& display_manager;
+    TextureManager& texture_manager;
 
     Camera camera;
     MasterRenderer renderer;

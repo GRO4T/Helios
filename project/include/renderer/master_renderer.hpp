@@ -27,23 +27,28 @@ namespace game_engine {
 
 class MasterRenderer {
 public:
-    MasterRenderer() : entity_renderer(projection_matrix), light_renderer(projection_matrix) {}
+    MasterRenderer()
+        : entity_renderer(projection_matrix),
+          light_renderer(projection_matrix) {}
     /*
     terrain_renderer(projection_matrix),
     skybox_renderer(projection_matrix),
     water_renderer(projection_matrix) {}
     */
 
-    static void calculateProjectionMatrix(float fov, float znear, float zfar, float display_width,
+    static void calculateProjectionMatrix(float fov, float znear, float zfar,
+                                          float display_width,
                                           float display_height);
 
-    // void registerObject(TerrainSharedPtr terrain) { terrains.push_back(terrain); }
+    // void registerObject(TerrainSharedPtr terrain) {
+    // terrains.push_back(terrain); }
     void registerObject(Entity* object) { entities.push_back(object); }
     void registerObject(Light* object) { lights.push_back(object); }
     /*
-    void registerForShadows(EntitySPtr entity) { entity_renderer.registerForShadows(entity); }
-    void registerObject(CubemapSharedPtr cubemap) { this->skybox = cubemap; }
-    void registerObject(WaterSharedPtr water_) { this->water = water_; }
+    void registerForShadows(EntitySPtr entity) {
+    entity_renderer.registerForShadows(entity); } void
+    registerObject(CubemapSharedPtr cubemap) { this->skybox = cubemap; } void
+    registerObject(WaterSharedPtr water_) { this->water = water_; }
      */
 
     void render(const Camera& camera, float time);

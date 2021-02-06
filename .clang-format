@@ -1,7 +1,6 @@
 ﻿---
 BasedOnStyle: Google
 AccessModifierOffset: '-4'
-ColumnLimit: '100'
 IndentWidth: '4'
 TabWidth: '4'
 

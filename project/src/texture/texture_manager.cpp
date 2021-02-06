@@ -26,8 +26,8 @@ void TextureManager::loadTexture(const std::string& filepath) {
     texture_map.insert(std::pair(filepath, texture));
 }
 
-TextureSPtr TextureManager::getLoadCubemapTexture(const std::string& cubemapName,
-                                                  const std::vector<std::string>& filepaths) {
+TextureSPtr TextureManager::getLoadCubemapTexture(
+    const std::string& cubemapName, const std::vector<std::string>& filepaths) {
     try {
         return cubemap_texture_map.at(cubemapName);
     } catch (...) {  // std::out_of_range

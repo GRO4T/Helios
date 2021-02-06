@@ -49,14 +49,16 @@ void DisplayManager::update() {
     delta_time = now - last_update;
     last_update = now;
     // std::cout << delta_time << "s" << std::endl;
-     //std::cout << "FPS: " << 1000.0f / delta_time << std::endl;
-     //std::cout << "mouse sensitivity: " << mouse_sensitivity_x << std::endl;
+    // std::cout << "FPS: " << 1000.0f / delta_time << std::endl;
+    // std::cout << "mouse sensitivity: " << mouse_sensitivity_x << std::endl;
     glfwSwapBuffers(window);
     mouse_dx = mouse_dy = 0;
     scroll_x = scroll_y = 0;
 }
 
-bool DisplayManager::windowShouldClose() { return glfwWindowShouldClose(window); }
+bool DisplayManager::windowShouldClose() {
+    return glfwWindowShouldClose(window);
+}
 
 void DisplayManager::close() {
     if (!windowShouldClose()) {
@@ -65,7 +67,8 @@ void DisplayManager::close() {
     glfwTerminate();
 }
 
-void DisplayManager::cursorPositionCallback(GLFWwindow* window, double pos_x, double pos_y) {
+void DisplayManager::cursorPositionCallback(GLFWwindow* window, double pos_x,
+                                            double pos_y) {
     DisplayManager::getInstance().updateMouseDelta(pos_x, pos_y);
 }
 
@@ -81,16 +84,20 @@ void DisplayManager::updateMouseDelta(double pos_x, double pos_y) {
     last_mouse_y = pos_y;
 }
 
-bool DisplayManager::isKeyPressed(Key key) { return glfwGetKey(window, key) == GLFW_PRESS; }
+bool DisplayManager::isKeyPressed(Key key) {
+    return glfwGetKey(window, key) == GLFW_PRESS;
+}
 
-void DisplayManager::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode) {
+void DisplayManager::keyCallback(GLFWwindow* window, int key, int scancode,
+                                 int action, int mode) {
     if (key == GLFW_KEY_1) {
         getInstance().decreaseMouseSensitivity(0.01);
     } else if (key == GLFW_KEY_2) {
         getInstance().increaseMouseSensitivity(0.01);
     }
 }
-void DisplayManager::scrollCallback(GLFWwindow* window, double offset_x, double offset_y) {
+void DisplayManager::scrollCallback(GLFWwindow* window, double offset_x,
+                                    double offset_y) {
     DisplayManager::getInstance().updateScroll(offset_x, offset_y);
 }
 void DisplayManager::updateScroll(double offset_x, double offset_y) {

@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include "stb_image.h"
 #include "opengl_all.hpp"
+#include "stb_image.h"
 
 namespace game_engine {
 
@@ -27,10 +27,12 @@ Loader::Loader() {
 
 GLuint Loader::loadMipmapTexture(GLuint texture_id, const char *filename) {
     // int width, height;
-    // unsigned char *image = SOIL_load_image(fname, &width, &height, 0, SOIL_LOAD_RGB);
+    // unsigned char *image = SOIL_load_image(fname, &width, &height, 0,
+    // SOIL_LOAD_RGB);
     int width, height, nrChannels;
     unsigned char *image = stbi_load(filename, &width, &height, &nrChannels, 0);
-    if (image == nullptr) throw std::runtime_error("Failed to load texture file");
+    if (image == nullptr)
+        throw std::runtime_error("Failed to load texture file");
 
     GLuint texture;
     glGenTextures(1, &texture);
@@ -40,7 +42,8 @@ GLuint Loader::loadMipmapTexture(GLuint texture_id, const char *filename) {
     glPixelStorei(GL_UNPACK_ALIGNMENT,
                   1);  // this line fixes random seqfaults
     // https://stackoverflow.com/questions/9950546/c-opengl-glteximage2d-access-violation
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
     // SOIL_free_image_data(image);
     stbi_image_free(image);
@@ -55,13 +58,15 @@ GLuint Loader::loadCubemap(const std::vector<std::string> &faces) {
 
     int width, height, nrChannels;
     for (unsigned int i = 0; i < faces.size(); i++) {
-        unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+        unsigned char *data =
+            stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
         if (data) {
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB,
-                         GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width,
+                         height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
             stbi_image_free(data);
         } else {
-            //std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+            // std::cout << "Cubemap texture failed to load at path: " <<
+            // faces[i] << std::endl;
             stbi_image_free(data);
         }
     }
@@ -76,22 +81,25 @@ GLuint Loader::loadCubemap(const std::vector<std::string> &faces) {
 
 void createViewMatrix(glm::mat4 &view, const Camera &camera) {
     view = glm::mat4(1.0f);
-    view = glm::rotate(view, (float)glm::radians(camera.getPitch()), glm::vec3(1, 0, 0));
-    view = glm::rotate(view, (float)glm::radians(camera.getYaw()), glm::vec3(0, 1, 0));
+    view = glm::rotate(view, (float)glm::radians(camera.getPitch()),
+                       glm::vec3(1, 0, 0));
+    view = glm::rotate(view, (float)glm::radians(camera.getYaw()),
+                       glm::vec3(0, 1, 0));
     view = glm::translate(view, -camera.getPosition());
 }
 
-void createTransformMatrix(glm::mat4 &transformation_matrix, const Transform &object_transform) {
+void createTransformMatrix(glm::mat4 &transformation_matrix,
+                           const Transform &object_transform) {
     transformation_matrix = glm::mat4(1.0f);
     const glm::vec3 &pos = object_transform.position;
     transformation_matrix = glm::translate(transformation_matrix, pos);
     const glm::vec3 &rot = object_transform.rotation;
-    transformation_matrix =
-        glm::rotate(transformation_matrix, (float)glm::radians(rot.x), glm::vec3(1, 0, 0));
-    transformation_matrix =
-        glm::rotate(transformation_matrix, (float)glm::radians(rot.y), glm::vec3(0, 1, 0));
-    transformation_matrix =
-        glm::rotate(transformation_matrix, (float)glm::radians(rot.z), glm::vec3(0, 0, 1));
+    transformation_matrix = glm::rotate(
+        transformation_matrix, (float)glm::radians(rot.x), glm::vec3(1, 0, 0));
+    transformation_matrix = glm::rotate(
+        transformation_matrix, (float)glm::radians(rot.y), glm::vec3(0, 1, 0));
+    transformation_matrix = glm::rotate(
+        transformation_matrix, (float)glm::radians(rot.z), glm::vec3(0, 0, 1));
     const glm::vec3 &scale = object_transform.scale;
     transformation_matrix = glm::scale(transformation_matrix, scale);
 }
@@ -115,8 +123,10 @@ std::ostream &utils::operator<<(std::ostream &os, const glm::vec3 &vec) {
 }
 
 void Image::load(const std::string &path) {
-    unsigned char *image = stbi_load(path.c_str(), &width, &height, &nr_channels, 0);
-    if (image == nullptr) throw std::runtime_error("Failed to load texture file");
+    unsigned char *image =
+        stbi_load(path.c_str(), &width, &height, &nr_channels, 0);
+    if (image == nullptr)
+        throw std::runtime_error("Failed to load texture file");
     std::unique_ptr<unsigned char[]> tmp(image);
     data = std::move(tmp);
 }

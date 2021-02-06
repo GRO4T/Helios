@@ -10,7 +10,8 @@ namespace game_engine {
 class EntityRenderer {
 public:
     EntityRenderer(const glm::mat4& projection_matrix);
-    void render(std::vector<Entity*>& entities, const Camera& camera, std::vector<Light*>& lights);
+    void render(std::vector<Entity*>& entities, const Camera& camera,
+                std::vector<Light*>& lights);
 
 private:
     void unbind(const Model& model);

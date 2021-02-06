@@ -28,7 +28,8 @@ private:
 
 struct Transform {
     Transform() { reset(); }
-    Transform(const glm::vec3 &pos, const glm::vec3 &rot, const glm::vec3 &scale) {
+    Transform(const glm::vec3 &pos, const glm::vec3 &rot,
+              const glm::vec3 &scale) {
         position = pos;
         rotation = rot;
         this->scale = scale;
@@ -52,7 +53,8 @@ public:
     unsigned char *getData() const { return data.get(); }
     float getRGB(int x, int y) const {
         unsigned bytes_per_pixel = nr_channels;
-        unsigned char *pixel_offset = data.get() + (y * width + x) * bytes_per_pixel;
+        unsigned char *pixel_offset =
+            data.get() + (y * width + x) * bytes_per_pixel;
         unsigned char r = pixel_offset[0];
         unsigned char g = pixel_offset[1];
         unsigned char b = pixel_offset[2];
@@ -67,7 +69,8 @@ private:
 };
 
 void createViewMatrix(glm::mat4 &view, const Camera &camera);
-void createTransformMatrix(glm::mat4 &transformation_matrix, const Transform &object_transform);
+void createTransformMatrix(glm::mat4 &transformation_matrix,
+                           const Transform &object_transform);
 
 std::ostream &operator<<(std::ostream &os, const glm::mat4 &mx);
 std::ostream &operator<<(std::ostream &os, const glm::vec4 &vec);

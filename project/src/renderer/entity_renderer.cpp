@@ -11,10 +11,10 @@ EntityRenderer::EntityRenderer(const glm::mat4& projection_matrix) {
     shader.setProjectionMatrix(projection_matrix);
 }
 
-void EntityRenderer::render(std::vector<Entity*>& entities, const Camera& camera, std::vector<Light*>& lights) {
+void EntityRenderer::render(std::vector<Entity*>& entities,
+                            const Camera& camera, std::vector<Light*>& lights) {
     shader.use();
     shader.setViewMatrix(camera);
-
 
     for (auto& entity : entities) {
         const auto& model = entity->getMaterializedModel().getModel();
@@ -35,7 +35,8 @@ void EntityRenderer::render(std::vector<Entity*>& entities, const Camera& camera
     }
 }
 
-void EntityRenderer::renderChildren(Entity& parent, glm::mat4 combined_transform) {
+void EntityRenderer::renderChildren(Entity& parent,
+                                    glm::mat4 combined_transform) {
     for (auto& child : parent.getChildren()) {
         Entity& entity = (Entity&)*child;
         glm::mat4 transform_matrix;
@@ -57,4 +58,4 @@ void EntityRenderer::prepareInstance(const Entity& entity) {
     shader.setMaterial("material", material);
 }
 
-}
+}  // namespace game_engine

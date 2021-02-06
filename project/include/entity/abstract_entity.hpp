@@ -14,12 +14,16 @@ public:
     Transformable() {}
     Transformable(const Transform& t) : transform(t) {}
 
-    void setTransform(const Transform& transform) { this->transform = transform; }
+    void setTransform(const Transform& transform) {
+        this->transform = transform;
+    }
     const Transform& getTransform() const { return transform; }
 
     void setPosition(const glm::vec3& pos) { transform.position = pos; }
     const glm::vec3& getPosition() const { return transform.position; }
-    void move(const glm::vec3& translation) { transform.position += translation; }
+    void move(const glm::vec3& translation) {
+        transform.position += translation;
+    }
 
     void setRotation(const glm::vec3& rot) { transform.rotation = rot; }
     const glm::vec3& getRotation() const { return transform.rotation; }
@@ -35,7 +39,7 @@ protected:
 class AbstractEntity : public Transformable {
 public:
     AbstractEntity() {}
-    AbstractEntity(const Transform& t): Transformable(t) {}
+    AbstractEntity(const Transform& t) : Transformable(t) {}
     virtual const MaterializedModel& getMaterializedModel() const = 0;
     virtual ~AbstractEntity() {}
 };

@@ -5,8 +5,7 @@
 using namespace game_engine;
 
 int main() {
-    if (!GameEngine::init())
-        return 1;
+    if (!GameEngine::init()) return 1;
     GameEngine engine;
     engine.run();
     return 0;

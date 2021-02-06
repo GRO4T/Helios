@@ -28,7 +28,8 @@ public:
     GLuint getProgramID() const { return program_id; }
 
 protected:
-    void bindAttribute(int attrib_number, const std::string &attrib_name) const {
+    void bindAttribute(int attrib_number,
+                       const std::string &attrib_name) const {
         glBindAttribLocation(program_id, attrib_number, attrib_name.c_str());
     }
 

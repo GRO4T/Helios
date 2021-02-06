@@ -14,7 +14,8 @@ class Entity : public AbstractEntity {
 public:
     Entity() {}
     Entity(MaterializedModelPtr materialized_model, const Transform& transform)
-        : AbstractEntity(transform), materialized_model(std::move(materialized_model)) {}
+        : AbstractEntity(transform),
+          materialized_model(std::move(materialized_model)) {}
     Entity(const Entity&) = delete;
     Entity(Entity&& e) = delete;  // we don't use it right now
     /*
@@ -26,7 +27,9 @@ public:
      */
     virtual ~Entity() {}
 
-    MaterializedModel& getMaterializedModel() const override { return *materialized_model; }
+    MaterializedModel& getMaterializedModel() const override {
+        return *materialized_model;
+    }
 
     void addChild(AbstractEntitySharedPtr child) { children.push_back(child); }
     std::vector<AbstractEntitySharedPtr>& getChildren() { return children; }
@@ -41,4 +44,4 @@ private:
 using EntityPtr = std::unique_ptr<Entity>;
 using EntitySPtr = std::shared_ptr<Entity>;
 
-}
+}  // namespace game_engine

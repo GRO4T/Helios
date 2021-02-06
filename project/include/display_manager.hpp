@@ -29,12 +29,16 @@ public:
     void updateMouseDelta(double pos_x, double pos_y);
     void updateScroll(double offset_x, double offset_y);
     void increaseMouseSensitivity(double delta) {
-        mouse_sensitivity_x = std::clamp(mouse_sensitivity_x + delta, 0.0, MAX_MOUSE_SENSITIVITY);
-        mouse_sensitivity_y = std::clamp(mouse_sensitivity_y + delta, 0.0, MAX_MOUSE_SENSITIVITY);
+        mouse_sensitivity_x =
+            std::clamp(mouse_sensitivity_x + delta, 0.0, MAX_MOUSE_SENSITIVITY);
+        mouse_sensitivity_y =
+            std::clamp(mouse_sensitivity_y + delta, 0.0, MAX_MOUSE_SENSITIVITY);
     }
     void decreaseMouseSensitivity(double delta) {
-        mouse_sensitivity_x = std::clamp(mouse_sensitivity_x - delta, 0.0, MAX_MOUSE_SENSITIVITY);
-        mouse_sensitivity_y = std::clamp(mouse_sensitivity_y - delta, 0.0, MAX_MOUSE_SENSITIVITY);
+        mouse_sensitivity_x =
+            std::clamp(mouse_sensitivity_x - delta, 0.0, MAX_MOUSE_SENSITIVITY);
+        mouse_sensitivity_y =
+            std::clamp(mouse_sensitivity_y - delta, 0.0, MAX_MOUSE_SENSITIVITY);
     }
 
     double getDeltaTime() const { return delta_time; }
@@ -48,9 +52,12 @@ private:
     DisplayManager(const DisplayManager&) = delete;
     DisplayManager& operator=(const DisplayManager&) = delete;
 
-    static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
-    static void cursorPositionCallback(GLFWwindow* window, double pos_x, double pos_y);
-    static void scrollCallback(GLFWwindow* window, double offset_x, double offset_y);
+    static void keyCallback(GLFWwindow* window, int key, int scancode,
+                            int action, int mode);
+    static void cursorPositionCallback(GLFWwindow* window, double pos_x,
+                                       double pos_y);
+    static void scrollCallback(GLFWwindow* window, double offset_x,
+                               double offset_y);
 
     void close();
 

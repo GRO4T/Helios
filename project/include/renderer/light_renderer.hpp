@@ -21,7 +21,8 @@ public:
         for (auto& light : lights) {
             const auto& model = light->getModel();
             glm::mat4 transform_matrix;
-            utils::createTransformMatrix(transform_matrix, light->getTransform());
+            utils::createTransformMatrix(transform_matrix,
+                                         light->getTransform());
             shader.setTransformationMatrix(transform_matrix);
             prepareInstance(*light);
             model.draw();

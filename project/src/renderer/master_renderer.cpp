@@ -6,11 +6,12 @@ namespace game_engine {
 
 glm::mat4 MasterRenderer::projection_matrix;
 
-void MasterRenderer::calculateProjectionMatrix(float fov, float znear, float zfar,
-                                               float display_width, float display_height) {
+void MasterRenderer::calculateProjectionMatrix(float fov, float znear,
+                                               float zfar, float display_width,
+                                               float display_height) {
     projection_matrix = glm::mat4(1.0f);
-    projection_matrix =
-        glm::perspective(glm::radians(fov), display_width / display_height, znear, zfar);
+    projection_matrix = glm::perspective(
+        glm::radians(fov), display_width / display_height, znear, zfar);
 }
 
 void MasterRenderer::render(const Camera& camera, float time) {

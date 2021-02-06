@@ -6,13 +6,13 @@
 namespace game_engine {
 
 struct PhongLight {
-    PhongLight(float ambient, float diffuse, float specular)
+    PhongLight(const glm::vec3 &ambient, const glm::vec3 &diffuse,
+               const glm::vec3 &specular)
         : ambient(ambient), diffuse(diffuse), specular(specular) {}
 
-    glm::vec3 color = glm::vec3(1, 1, 1);
-    float ambient;
-    float diffuse;
-    float specular;
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
 };
 
 using utils::Transform;
@@ -22,11 +22,12 @@ public:
         : Transformable(t), model(std::move(model)), phong_light(phong_light) {}
 
     const Model &getModel() const { return *model; }
-    const glm::vec3 &getLightColor() const { return phong_light.color; }
-    void setAmbient(float value) { phong_light.ambient = value; }
-    float getAmbient() const { return phong_light.ambient; }
-    float getDiffuse() const { return phong_light.diffuse; }
-    float getSpecular() const { return phong_light.specular; }
+    const glm::vec3 &getAmbient() const { return phong_light.ambient; }
+    const glm::vec3 &getDiffuse() const { return phong_light.diffuse; }
+    const glm::vec3 &getSpecular() const { return phong_light.specular; }
+    void setAmbient(const glm::vec3 &value) { phong_light.ambient = value; }
+    void setDiffuse(const glm::vec3 &value) { phong_light.diffuse = value; }
+    void setSpecular(const glm::vec3 &value) { phong_light.specular = value; }
 
 private:
     ModelPtr model;

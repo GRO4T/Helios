@@ -18,7 +18,8 @@ public:
     virtual void draw() const { glDrawArrays(GL_TRIANGLES, 0, vertex_count); }
 
 protected:
-    void storeDataInAttribList(GLuint attrib_number, GLuint vector_len, std::vector<GLfloat>& data);
+    void storeDataInAttribList(GLuint attrib_number, GLuint vector_len,
+                               std::vector<GLfloat>& data);
 
     int vertex_count;
     GLuint VAO;
@@ -39,7 +40,8 @@ protected:
 class StripedModel : public IndexedModel {
 public:
     void draw() const override {
-        glDrawElements(GL_TRIANGLE_STRIP, index_count, GL_UNSIGNED_INT, (void*)0);
+        glDrawElements(GL_TRIANGLE_STRIP, index_count, GL_UNSIGNED_INT,
+                       (void*)0);
     }
 };
 
@@ -47,4 +49,4 @@ using ModelPtr = std::unique_ptr<Model>;
 using IndexedModelPtr = std::unique_ptr<IndexedModel>;
 using StripedModelPtr = std::unique_ptr<StripedModel>;
 
-}
+}  // namespace game_engine

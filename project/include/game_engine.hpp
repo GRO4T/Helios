@@ -37,7 +37,7 @@ public:
             std::make_unique<MaterializedModel>(std::move(model), material);
         Transform t;
         t.position.y = 0.5f;
-        EntityPtr cube = std::make_unique<Entity>(std::move(materialized_model), t);
+        cube = std::make_unique<Entity>(std::move(materialized_model), t);
 
         // plane
         ModelPtr model2 = std::make_unique<Model>();
@@ -48,7 +48,7 @@ public:
         MaterializedModelPtr materialized_model2 =
             std::make_unique<MaterializedModel>(std::move(model2), material2);
         Transform t2;
-        t2.rotation.x = 90.0f;
+        t2.rotation.x = -90.0f;
         EntityPtr plane = std::make_unique<Entity>(std::move(materialized_model2), t2);
 
         renderer.registerObject(plane.get());
@@ -58,17 +58,17 @@ public:
         ModelPtr model3 = std::make_unique<Model>();
         model3->load(primitive::cube(1.0f));
         Transform t3;
-        t3.position.y = 0.5f;
+        t3.position.y = 2.0f;
         t3.position.z = 2.0f;
-        LightPtr light = std::make_unique<Light>(std::move(model3), t3, PhongLight(0.2f, 0, 0));
+        LightPtr light = std::make_unique<Light>(std::move(model3), t3, PhongLight(0.2f, 0.0f, 0.5f));
 
         renderer.registerObject(light.get());
 
         while (!display_manager.windowShouldClose()) {
             double delta_time = display_manager.getDeltaTime();
-            light->setAmbient(light->getAmbient() + 0.002f);
             display_manager.handleEvents();
             updateCamera();
+            moveCube();
             renderer.render(camera, delta_time);
             display_manager.update();
         }
@@ -86,11 +86,28 @@ private:
         camera.rotate();
     }
 
+    void moveCube() {
+        if (display_manager.isKeyPressed(GLFW_KEY_UP)) {
+            cube->move(glm::vec3(1, 0, 0));
+        }
+        if (display_manager.isKeyPressed(GLFW_KEY_DOWN)) {
+            cube->move(glm::vec3(-1, 0, 0));
+        }
+        if (display_manager.isKeyPressed(GLFW_KEY_RIGHT)) {
+            cube->move(glm::vec3(0, 0, 1));
+        }
+        if (display_manager.isKeyPressed(GLFW_KEY_LEFT)) {
+            cube->move(glm::vec3(0, 0, -1));
+        }
+    }
+
     DisplayManager& display_manager;
     TextureManager& texture_manager;
 
     Camera camera;
     MasterRenderer renderer;
+
+    EntityPtr cube;
 };
 
 }  // namespace game_engine

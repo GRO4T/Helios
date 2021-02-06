@@ -26,6 +26,7 @@ void EntityRenderer::render(std::vector<Entity*>& entities, const Camera& camera
         // set up lights
         for (const auto& light : lights) {
             shader.setLight("light", *light);
+            shader.setVec3("camera_position", camera.getPosition());
         }
 
         model.draw();

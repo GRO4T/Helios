@@ -19,7 +19,7 @@ elseif (WIN32)
     find_package(OpenGL REQUIRED)
 
     if (NOT CMAKE_CL_64)
-        message(STATUS "Cannot compile for Windows 32bit!")
+        message(FATAL_ERROR "Cannot compile for Windows 32bit!")
     else ()
         include_directories(lib/win/64bit/include)
 

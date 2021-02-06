@@ -1,6 +1,7 @@
 #pragma once
 
 #include <light.hpp>
+
 #include "shader_program.hpp"
 #include "utils.hpp"
 
@@ -27,9 +28,10 @@ public:
 
     void setLight(const std::string& name, const Light& light) const {
         setFloat(name + ".ambient", light.getAmbient());
-      setFloat(name + ".diffuse", light.getDiffuse());
-      setFloat(name + ".specular", light.getSpecular());
-      setVec3(name + ".color", light.getLightColor());
+        setFloat(name + ".diffuse", light.getDiffuse());
+        setFloat(name + ".specular", light.getSpecular());
+        setVec3(name + ".color", light.getLightColor());
+        setVec3(name + ".position", light.getTransform().position);
     }
 };
 

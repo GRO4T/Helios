@@ -16,13 +16,11 @@ struct PhongLight {
 };
 
 using utils::Transform;
-class Light {
+class Light : public Transformable {
 public:
     Light(ModelPtr model, const Transform &t, const PhongLight &phong_light)
-        : model(std::move(model)), transform(t), phong_light(phong_light) {}
+        : Transformable(t), model(std::move(model)), phong_light(phong_light) {}
 
-    void setTransform(const Transform &transform) { this->transform = transform; }
-    const Transform &getTransform() const { return transform; }
     const Model &getModel() const { return *model; }
     const glm::vec3 &getLightColor() const { return phong_light.color; }
     void setAmbient(float value) { phong_light.ambient = value; }
@@ -31,7 +29,6 @@ public:
     float getSpecular() const { return phong_light.specular; }
 
 private:
-    Transform transform;
     ModelPtr model;
 
     PhongLight phong_light;

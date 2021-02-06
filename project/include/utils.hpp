@@ -17,7 +17,7 @@ namespace utils {
 class Loader {
 public:
     static Loader &getInstance();
-    static GLuint loadMipmapTexture(GLuint texture_id, const char *filename);
+    static GLuint loadMipmapTexture(const char *filename);
     static GLuint loadCubemap(const std::vector<std::string> &faces);
 
 private:

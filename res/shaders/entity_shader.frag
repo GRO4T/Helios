@@ -2,11 +2,13 @@
 
 struct Material {
     vec3 ambient;
+    bool is_diffuse_map;
+    sampler2D diffuse_map;
     vec3 diffuse;
+    bool is_specular_map;
+    sampler2D specular_map;
     vec3 specular;
     float shininess;
-    vec4 base_color;
-    sampler2D texture;
 };
 
 struct PointLight {
@@ -27,17 +29,30 @@ in vec3 p_world_position;
 in vec3 p_normal;
 
 void main() {
-    vec4 texture_color = texture(material.texture, p_uv);
+    vec3 material_diffuse;
+    if (material.is_diffuse_map) {
+        material_diffuse = texture(material.diffuse_map, p_uv).xyz;
+    }
+    else {
+        material_diffuse = material.diffuse;
+    }
+    vec3 material_specular;
+    if (material.is_specular_map) {
+        material_specular = texture(material.specular_map, p_uv).xyz;
+    }
+    else {
+        material_specular = material.specular;
+    }
 
     vec3 normal = normalize(p_normal);
     vec3 light_dir = normalize(light.position - p_world_position);
     vec3 ambient = light.ambient * material.ambient;
-    vec3 diffuse = light.diffuse * max(dot(normal, light_dir), 0.0) * material.diffuse;
+    vec3 diffuse = light.diffuse * max(dot(normal, light_dir), 0.0) * material_diffuse;
     vec3 camera_dir = normalize(camera_position - p_world_position);
     vec3 reflect_dir = reflect(-light_dir, normal);
-    vec3 specular = light.specular * pow(max(dot(camera_dir, reflect_dir), 0.0), material.shininess) * material.specular;
+    vec3 specular = light.specular * pow(max(dot(camera_dir, reflect_dir), 0.0), material.shininess) * material_specular;
 
-    vec3 result = (diffuse + ambient + specular) * texture_color.xyz;
+    vec3 result = diffuse + ambient + specular;
     frag_color = vec4(result, 1.0);
 
 }

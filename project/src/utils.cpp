@@ -15,6 +15,18 @@ Loader &Loader::getInstance() {
 }
 
 Loader::Loader() {
+}
+
+GLuint Loader::loadMipmapTexture(const char *filename) {
+    int width, height, nrChannels;
+    unsigned char *image = stbi_load(filename, &width, &height, &nrChannels, 0);
+    if (image == nullptr)
+        throw std::runtime_error("Failed to load texture file");
+
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
     // Set the texture wrapping parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
                     GL_REPEAT);  // Set texture wrapping to GL_REPEAT (usually
@@ -23,22 +35,7 @@ Loader::Loader() {
     // Set texture filtering parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-}
 
-GLuint Loader::loadMipmapTexture(GLuint texture_id, const char *filename) {
-    // int width, height;
-    // unsigned char *image = SOIL_load_image(fname, &width, &height, 0,
-    // SOIL_LOAD_RGB);
-    int width, height, nrChannels;
-    unsigned char *image = stbi_load(filename, &width, &height, &nrChannels, 0);
-    if (image == nullptr)
-        throw std::runtime_error("Failed to load texture file");
-
-    GLuint texture;
-    glGenTextures(1, &texture);
-
-    glActiveTexture(texture_id);
-    glBindTexture(GL_TEXTURE_2D, texture);
     glPixelStorei(GL_UNPACK_ALIGNMENT,
                   1);  // this line fixes random seqfaults
     // https://stackoverflow.com/questions/9950546/c-opengl-glteximage2d-access-violation
@@ -47,7 +44,6 @@ GLuint Loader::loadMipmapTexture(GLuint texture_id, const char *filename) {
     glGenerateMipmap(GL_TEXTURE_2D);
     // SOIL_free_image_data(image);
     stbi_image_free(image);
-    glBindTexture(GL_TEXTURE_2D, 0);
     return texture;
 }
 

@@ -31,16 +31,6 @@ public:
         createScene();
         while (!display_manager.windowShouldClose()) {
             double delta_time = display_manager.getDeltaTime();
-
-            /*
-            // fancy lights
-            auto light_color = glm::vec3(std::sin(glfwGetTime() * 2.0f),
-                                         std::sin(glfwGetTime() * 0.7f),
-                                         std::sin(glfwGetTime() * 1.3f));
-            light->setAmbient(light_color * glm::vec3(0.5f));
-            light->setDiffuse(light_color * glm::vec3(0.2f));
-             */
-
             display_manager.handleEvents();
             updateCamera();
             moveCube();
@@ -80,19 +70,30 @@ private:
         // cube
         ModelPtr model = std::make_unique<Model>();
         model->load(primitive::cube(1.0f));
-        MaterialSPtr material = std::make_shared<material::Gold>();
-        /*
-        // tutorial material
-        MaterialSPtr material =
-            std::make_shared<Material>(glm::vec3{1.0f, 0.5f, 0.31f},
-        glm::vec3{1.0f, 0.5f, 0.31f}, glm::vec3{0.5f, 0.5f, 0.5f}, 32.0f);
-                                       */
-
+        MaterialSPtr material = std::make_shared<material::Silver>();
+        material
+            ->setDiffuseMap(
+                &texture_manager.getTexture("res/wood_metal_container.jpg"))
+            .setSpecularMap(&texture_manager.getTexture(
+                "res/wood_metal_container_specular.jpg"));
         MaterializedModelPtr materialized_model =
             std::make_unique<MaterializedModel>(std::move(model), material);
         Transform t;
         t.position.y = 0.5f;
         cube = std::make_unique<Entity>(std::move(materialized_model), t);
+
+        // cube2
+        ModelPtr model4 = std::make_unique<Model>();
+        model4->load(primitive::cube(1.0f));
+        MaterialSPtr material4 = std::make_shared<material::Silver>();
+        material4->setDiffuseMap(
+            &texture_manager.getTexture("res/wood_metal_container.jpg"));
+        MaterializedModelPtr materialized_model4 =
+            std::make_unique<MaterializedModel>(std::move(model4), material4);
+        Transform t4;
+        t4.position.y = 0.5f;
+        t4.position.z = 2.0f;
+        cube2 = std::make_unique<Entity>(std::move(materialized_model4), t4);
 
         // plane
         ModelPtr model2 = std::make_unique<Model>();
@@ -110,6 +111,7 @@ private:
 
         renderer.registerObject(plane.get());
         renderer.registerObject(cube.get());
+        renderer.registerObject(cube2.get());
 
         // lights
         ModelPtr model3 = std::make_unique<Model>();
@@ -131,6 +133,7 @@ private:
     MasterRenderer renderer;
 
     EntityPtr cube;
+    EntityPtr cube2;
     EntityPtr plane;
     LightPtr light;
 };

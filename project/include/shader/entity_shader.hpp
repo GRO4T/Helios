@@ -16,13 +16,26 @@ public:
                         "res/shaders/entity_shader.frag") {}
 
     void setMaterial(const std::string& name, const Material& material) const {
-        setVec3(name + ".ambient", material.ambient);
-        setVec3(name + ".diffuse", material.diffuse);
-        setVec3(name + ".specular", material.specular);
-        setFloat(name + ".shininess", material.shininess);
-        glActiveTexture(material.texture->getTextureUnitShaderID());
-        glBindTexture(GL_TEXTURE_2D, material.texture->getTexture());
-        setInt(name + ".texture", material.texture->getTextureUnitShaderID());
+        setBool(name + ".is_diffuse_map", material.isDiffuseMap());
+        if (material.isDiffuseMap()) {
+            setInt(name + ".diffuse_map", 0);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, material.getDiffuseMap()->getTexture());
+        }
+        else {
+            setVec3(name + ".diffuse", material.getDiffuse());
+        }
+        setVec3(name + ".ambient", material.getAmbient());
+        setBool(name + ".is_specular_map", material.isSpecularMap());
+        if (material.isSpecularMap()) {
+            setInt(name + ".specular_map", 1);
+            glActiveTexture(GL_TEXTURE0 + 1);
+            glBindTexture(GL_TEXTURE_2D, material.getSpecularMap()->getTexture());
+        }
+        else {
+            setVec3(name + ".specular", material.getSpecular());
+        }
+        setFloat(name + ".shininess", material.getShininess());
     }
 
     void setLight(const std::string& name, const Light& light) const {

@@ -38,11 +38,21 @@ public:
         setFloat(name + ".shininess", material.getShininess());
     }
 
-    void setLight(const std::string& name, const Light& light) const {
+    void setPointLight(const std::string& name, const PointLight& light) const {
         setVec3(name + ".ambient", light.getAmbient());
         setVec3(name + ".diffuse", light.getDiffuse());
         setVec3(name + ".specular", light.getSpecular());
         setVec3(name + ".position", light.getTransform().position);
+        setFloat(name + ".constant", light.getConstant());
+        setFloat(name + ".linear", light.getLinear());
+        setFloat(name + ".quadratic", light.getQuadratic());
+    }
+
+    void setDirLight(const std::string& name, const DirLight& light) const {
+        setVec3(name + ".ambient", light.getAmbient());
+        setVec3(name + ".diffuse", light.getDiffuse());
+        setVec3(name + ".specular", light.getSpecular());
+        setVec3(name + ".direction", light.getDirection());
     }
 };
 

@@ -3,6 +3,8 @@
 #include <renderer/master_renderer.hpp>
 
 #include "display_manager.hpp"
+#include "utils.hpp"
+
 namespace game_engine {
 
 class GameEngine {
@@ -28,12 +30,13 @@ public:
         return success;
     }
     void run() {
+        std::srand(std::time(0));
         createScene();
         while (!display_manager.windowShouldClose()) {
             double delta_time = display_manager.getDeltaTime();
             display_manager.handleEvents();
             updateCamera();
-            moveCube();
+            moveLight();
             renderer.render(camera, delta_time);
             display_manager.update();
         }
@@ -51,49 +54,31 @@ private:
         camera.rotate();
     }
 
-    void moveCube() {
-        if (display_manager.isKeyPressed(GLFW_KEY_UP)) {
-            cube->move(glm::vec3(1, 0, 0));
-        }
-        if (display_manager.isKeyPressed(GLFW_KEY_DOWN)) {
-            cube->move(glm::vec3(-1, 0, 0));
-        }
-        if (display_manager.isKeyPressed(GLFW_KEY_RIGHT)) {
-            cube->move(glm::vec3(0, 0, 1));
-        }
-        if (display_manager.isKeyPressed(GLFW_KEY_LEFT)) {
-            cube->move(glm::vec3(0, 0, -1));
-        }
-    }
-
     void createScene() {
-        // cube
-        ModelPtr model = std::make_unique<Model>();
-        model->load(primitive::cube(1.0f));
-        MaterialSPtr material = std::make_shared<material::Silver>();
-        material
-            ->setDiffuseMap(
-                &texture_manager.getTexture("res/wood_metal_container.jpg"))
-            .setSpecularMap(&texture_manager.getTexture(
-                "res/wood_metal_container_specular.jpg"));
-        MaterializedModelPtr materialized_model =
-            std::make_unique<MaterializedModel>(std::move(model), material);
-        Transform t;
-        t.position.y = 0.5f;
-        cube = std::make_unique<Entity>(std::move(materialized_model), t);
-
-        // cube2
-        ModelPtr model4 = std::make_unique<Model>();
-        model4->load(primitive::cube(1.0f));
-        MaterialSPtr material4 = std::make_shared<material::Silver>();
-        material4->setDiffuseMap(
-            &texture_manager.getTexture("res/wood_metal_container.jpg"));
-        MaterializedModelPtr materialized_model4 =
-            std::make_unique<MaterializedModel>(std::move(model4), material4);
-        Transform t4;
-        t4.position.y = 0.5f;
-        t4.position.z = 2.0f;
-        cube2 = std::make_unique<Entity>(std::move(materialized_model4), t4);
+        // cubes
+        auto& rg = utils::RandomNumberGenerator::getInstance();
+        for (int i = 0; i < 40; ++i) {
+            ModelPtr model = std::make_unique<Model>();
+            model->load(primitive::cube(1.0f));
+            MaterialSPtr material = std::make_shared<material::Silver>();
+            material
+                ->setDiffuseMap(
+                    &texture_manager.getTexture("res/wood_metal_container.jpg"))
+                .setSpecularMap(&texture_manager.getTexture(
+                    "res/wood_metal_container_specular.jpg"));
+            MaterializedModelPtr materialized_model =
+                std::make_unique<MaterializedModel>(std::move(model), material);
+            Transform t;
+            const float pos_m = 20.0f;
+            t.position =
+                glm::vec3(rg.random<-1, 1>() * pos_m, rg.random_0_1() * pos_m,
+                          rg.random<-1, 1>() * pos_m);
+            entities.push_back(std::move(
+                std::make_unique<Entity>(std::move(materialized_model), t)));
+        }
+        for (auto& e : entities) {
+            renderer.registerObject(e.get());
+        }
 
         // plane
         ModelPtr model2 = std::make_unique<Model>();
@@ -110,21 +95,42 @@ private:
         plane = std::make_unique<Entity>(std::move(materialized_model2), t2);
 
         renderer.registerObject(plane.get());
-        renderer.registerObject(cube.get());
-        renderer.registerObject(cube2.get());
 
-        // lights
+        // point_lights
         ModelPtr model3 = std::make_unique<Model>();
         model3->load(primitive::sphere(1.0f, 25));
         Transform t3;
         t3.position.y = 4.0f;
-        light = std::make_unique<Light>(
+        point_light = std::make_unique<PointLight>(
             std::move(model3), t3,
             PhongLight{
-                {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}});
+                {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
+            PointLight::Attenuation{1.0f, 0.09f, 0.032f});
 
-        renderer.registerObject(light.get());
+        renderer.registerObject(point_light.get());
+
+        // dir light
+        dir_light = std::make_unique<DirLight>(
+            PhongLight{
+                {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
+            glm::vec3{0, -1, 1});
+        renderer.registerObject(dir_light.get());
     };
+
+    void moveLight() {
+        if (display_manager.isKeyPressed(GLFW_KEY_UP)) {
+            point_light->move(glm::vec3(1, 0, 0));
+        }
+        if (display_manager.isKeyPressed(GLFW_KEY_DOWN)) {
+            point_light->move(glm::vec3(-1, 0, 0));
+        }
+        if (display_manager.isKeyPressed(GLFW_KEY_RIGHT)) {
+            point_light->move(glm::vec3(0, 0, 1));
+        }
+        if (display_manager.isKeyPressed(GLFW_KEY_LEFT)) {
+            point_light->move(glm::vec3(0, 0, -1));
+        }
+    }
 
     DisplayManager& display_manager;
     TextureManager& texture_manager;
@@ -132,10 +138,10 @@ private:
     Camera camera;
     MasterRenderer renderer;
 
-    EntityPtr cube;
-    EntityPtr cube2;
+    std::vector<EntityPtr> entities;
     EntityPtr plane;
-    LightPtr light;
+    PointLightPtr point_light;
+    DirLightPtr dir_light;
 };
 
 }  // namespace game_engine

@@ -15,6 +15,12 @@ sudo apt install libglm-dev
 sudo apt install libglfw3-dev
 ```
 
+## Useful
+### Point light attenuation
+![](https://i.imgur.com/W1z0qHD.png)
+### Materials
+http://devernay.free.fr/cours/opengl/materials.html
+
 ## What I've learned
 ### Textures
 #### When creating a texture you don't bind it to any particular texture unit

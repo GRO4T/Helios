@@ -7,6 +7,8 @@
 #include "camera.hpp"
 #include "opengl_all.hpp"
 #include "stb_image.h"
+#include <ctime>
+#include <random>
 
 // class Entity;
 
@@ -81,6 +83,28 @@ glm::vec3 lerp(const glm::vec3 &a, const glm::vec3 &b, float ratio);
 glm::vec3 rotate_x(const glm::vec3 &v, float angle);
 glm::vec3 rotate_y(const glm::vec3 &v, float angle);
 glm::vec3 rotate_z(const glm::vec3 &v, float angle);
+
+class RandomNumberGenerator {
+public:
+    static RandomNumberGenerator& getInstance();
+
+    RandomNumberGenerator(const RandomNumberGenerator&) = delete;
+    RandomNumberGenerator& operator=(const RandomNumberGenerator&) = delete;
+
+    float random_0_1();
+
+    template <int a, int b>
+    float random() {
+        static std::uniform_real_distribution<float> dis(a, b);
+        return dis(generator_);
+    }
+
+private:
+    RandomNumberGenerator();
+
+    std::mt19937 generator_;
+    std::uniform_real_distribution<float> dis_0_1;
+};
 
 }  // namespace utils
 

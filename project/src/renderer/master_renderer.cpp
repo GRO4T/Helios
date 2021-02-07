@@ -18,8 +18,9 @@ void MasterRenderer::render(const Camera& camera, float time) {
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    entity_renderer.render(entities, camera, point_lights, dir_light);
-    light_renderer.render(point_lights, camera);
+    entity_renderer.render(entities, camera, point_lights, dir_light,
+                           spot_lights, global_light);
+    light_renderer.render(physical_lights, camera);
 }
 
 }  // namespace game_engine

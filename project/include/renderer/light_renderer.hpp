@@ -14,7 +14,7 @@ public:
         shader.setProjectionMatrix(projection_matrix);
     }
 
-    void render(std::vector<PointLight*>& lights, const Camera& camera) {
+    void render(std::vector<PhysicalLight*>& lights, const Camera& camera) {
         shader.use();
         shader.setViewMatrix(camera);
 
@@ -32,7 +32,7 @@ public:
 
 private:
     void unbind(const Model& model) { glBindVertexArray(0); }
-    void prepareInstance(const PointLight& light) {
+    void prepareInstance(const PhysicalLight& light) {
         glBindVertexArray(light.getModel().getVao());
     }
 

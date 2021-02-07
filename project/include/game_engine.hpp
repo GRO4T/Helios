@@ -108,13 +108,27 @@ private:
             PointLight::Attenuation{1.0f, 0.09f, 0.032f});
 
         renderer.registerObject(point_light.get());
-
         // dir light
         dir_light = std::make_unique<DirLight>(
             PhongLight{
                 {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
             glm::vec3{0, -1, 1});
         renderer.registerObject(dir_light.get());
+        // spot light
+        ModelPtr model4 = std::make_unique<Model>();
+        model4->load(primitive::sphere(1.0f, 25));
+        Transform t4;
+        t4.position.y = 4.0f;
+        spot_light = std::make_unique<SpotLight>(
+            std::move(model4), t4,
+            PhongLight{
+                {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
+            glm::vec3{0, -1, 1}, 12.5f, 30.0f);
+        renderer.registerObject(spot_light.get());
+        global_light = std::make_unique<Light>(
+            PhongLight{
+                {0.2f, 0.2f, 0.2f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
+        renderer.setGlobalLight(global_light.get());
     };
 
     void moveLight() {
@@ -142,6 +156,8 @@ private:
     EntityPtr plane;
     PointLightPtr point_light;
     DirLightPtr dir_light;
+    SpotLightPtr spot_light;
+    LightPtr global_light;
 };
 
 }  // namespace game_engine

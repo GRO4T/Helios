@@ -11,7 +11,9 @@ class EntityRenderer {
 public:
     EntityRenderer(const glm::mat4& projection_matrix);
     void render(std::vector<Entity*>& entities, const Camera& camera,
-                std::vector<PointLight*>& point_lights, DirLight* dir_light);
+                std::vector<PointLight*>& point_lights, DirLight* dir_light,
+                std::vector<SpotLight*>& spot_lights,
+                Light* global_light);
 
 private:
     void unbind(const Model& model);

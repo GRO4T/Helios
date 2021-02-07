@@ -33,7 +33,18 @@ private:
 
 using LightPtr = std::unique_ptr<Light>;
 
-class PointLight : public Light, public Transformable {
+class PhysicalLight : public Light, public Transformable {
+public:
+    PhysicalLight(const PhongLight &phong_light, ModelPtr model,
+                  const Transform &t)
+        : Light(phong_light), Transformable(t), model(std::move(model)) {}
+    const Model &getModel() const { return *model; }
+
+protected:
+    ModelPtr model;
+};
+
+class PointLight : public PhysicalLight {
 public:
     struct Attenuation {
         float constant;
@@ -41,19 +52,38 @@ public:
         float quadratic;
     };
     PointLight(ModelPtr model, const Transform &t,
-               const PhongLight &phong_light, const Attenuation& attenuation)
-        : Light(phong_light), Transformable(t), model(std::move(model)), attenuation(attenuation) {}
-    const Model &getModel() const { return *model; }
+               const PhongLight &phong_light, const Attenuation &attenuation)
+        : PhysicalLight(phong_light, std::move(model), t),
+          attenuation(attenuation) {}
     float getConstant() const { return attenuation.constant; }
     float getLinear() const { return attenuation.linear; }
     float getQuadratic() const { return attenuation.quadratic; }
 
 private:
-    ModelPtr model;
     Attenuation attenuation;
 };
 
 using PointLightPtr = std::unique_ptr<PointLight>;
+
+class SpotLight : public PhysicalLight {
+public:
+    SpotLight(ModelPtr model, const Transform &t, const PhongLight &phong_light,
+              const glm::vec3 &direction, float cut_off, float outer_cut_off)
+        : PhysicalLight(phong_light, std::move(model), t),
+          direction(direction),
+          cut_off(cut_off),
+          outer_cut_off(outer_cut_off) {}
+    const glm::vec3 &getDirection() const { return direction; }
+    float getCutOff() const { return cut_off; }
+    float getOuterCutOff() const { return outer_cut_off; }
+
+private:
+    glm::vec3 direction;
+    float cut_off;
+    float outer_cut_off;
+};
+
+using SpotLightPtr = std::unique_ptr<SpotLight>;
 
 class DirLight : public Light {
 public:

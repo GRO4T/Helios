@@ -20,9 +20,9 @@ public:
         if (material.isDiffuseMap()) {
             setInt(name + ".diffuse_map", 0);
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, material.getDiffuseMap()->getTexture());
-        }
-        else {
+            glBindTexture(GL_TEXTURE_2D,
+                          material.getDiffuseMap()->getTexture());
+        } else {
             setVec3(name + ".diffuse", material.getDiffuse());
         }
         setVec3(name + ".ambient", material.getAmbient());
@@ -30,9 +30,9 @@ public:
         if (material.isSpecularMap()) {
             setInt(name + ".specular_map", 1);
             glActiveTexture(GL_TEXTURE0 + 1);
-            glBindTexture(GL_TEXTURE_2D, material.getSpecularMap()->getTexture());
-        }
-        else {
+            glBindTexture(GL_TEXTURE_2D,
+                          material.getSpecularMap()->getTexture());
+        } else {
             setVec3(name + ".specular", material.getSpecular());
         }
         setFloat(name + ".shininess", material.getShininess());
@@ -53,6 +53,23 @@ public:
         setVec3(name + ".diffuse", light.getDiffuse());
         setVec3(name + ".specular", light.getSpecular());
         setVec3(name + ".direction", light.getDirection());
+    }
+
+    void setSpotLight(const std::string& name, const SpotLight& light) const {
+        setVec3(name + ".ambient", light.getAmbient());
+        setVec3(name + ".diffuse", light.getDiffuse());
+        setVec3(name + ".specular", light.getSpecular());
+        setVec3(name + ".position", light.getTransform().position);
+        setVec3(name + ".direction", light.getDirection());
+        setFloat(name + ".cut_off", std::cos(glm::radians(light.getCutOff())));
+        setFloat(name + ".outer_cut_off",
+                 std::cos(glm::radians(light.getOuterCutOff())));
+    }
+
+    void setGlobalLight(const std::string& name, const Light& light) const {
+        setVec3(name + ".ambient", light.getAmbient());
+        setVec3(name + ".diffuse", light.getDiffuse());
+        setVec3(name + ".specular", light.getSpecular());
     }
 };
 

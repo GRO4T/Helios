@@ -12,7 +12,11 @@ EntityRenderer::EntityRenderer(const glm::mat4& projection_matrix) {
 }
 
 void EntityRenderer::render(std::vector<Entity*>& entities,
-                            const Camera& camera, std::vector<PointLight*>& point_lights, DirLight* dir_light) {
+                            const Camera& camera,
+                            std::vector<PointLight*>& point_lights,
+                            DirLight* dir_light,
+                            std::vector<SpotLight*>& spot_lights,
+                            Light* global_light) {
     shader.use();
     shader.setViewMatrix(camera);
 
@@ -24,11 +28,15 @@ void EntityRenderer::render(std::vector<Entity*>& entities,
         prepareInstance(*entity);
 
         shader.setVec3("camera_position", camera.getPosition());
-        if (dir_light != nullptr)
-            shader.setDirLight("dir_light", *dir_light);
+        if (dir_light != nullptr) shader.setDirLight("dir_light", *dir_light);
         for (const auto& light : point_lights) {
             shader.setPointLight("point_light", *light);
         }
+        for (const auto& light : spot_lights) {
+            shader.setSpotLight("spot_light", *light);
+        }
+        if (global_light != nullptr)
+            shader.setGlobalLight("global_light", *global_light);
 
         model.draw();
         unbind(model);

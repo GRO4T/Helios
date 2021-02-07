@@ -1,5 +1,8 @@
 # opengl-game-engine
 
+## Current project state
+![](https://i.imgur.com/bUdMwuJ.png)
+
 ## Installing dependencies
 ### Linux
 #### GLEW

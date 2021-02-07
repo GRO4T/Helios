@@ -76,59 +76,121 @@ private:
             entities.push_back(std::move(
                 std::make_unique<Entity>(std::move(materialized_model), t)));
         }
-        for (auto& e : entities) {
-            renderer.registerObject(e.get());
+
+        // planes
+        {
+            auto create_plane = [&](const Transform& t) {
+                ModelPtr model = std::make_unique<Model>();
+                model->load(primitive::plane(20, 20, 4, 4));
+                /*
+                MaterialSPtr material = std::make_shared<material::Silver>(
+                    &texture_manager.getTexture("res/metal.jpg"));
+                    */
+                MaterialSPtr material = std::make_shared<material::Silver>();
+                MaterializedModelPtr materialized_model =
+                    std::make_unique<MaterializedModel>(std::move(model),
+                                                        material);
+                entities.push_back(std::move(std::make_unique<Entity>(
+                    std::move(materialized_model), t)));
+            };
+            Transform t;
+            t.rotation.x = -90.0f;
+            create_plane(t);
+            t.position.y = 20.0f;
+            create_plane(t);
+            t.rotation.x = 0.0f;
+            t.position = glm::vec3(0, 10, -20);
+            create_plane(t);
+            t.position.z = 20.0f;
+            create_plane(t);
+            t.rotation.y = 90.0f;
+            t.position = glm::vec3(20, 0, 0);
+            create_plane(t);
+            t.position.x = -20;
+            create_plane(t);
         }
 
-        // plane
-        ModelPtr model2 = std::make_unique<Model>();
-        model2->load(primitive::plane(20, 20, 4, 4));
-        /*
-        MaterialSPtr material2 = std::make_shared<material::Silver>(
-            &texture_manager.getTexture("res/metal.jpg"));
-            */
-        MaterialSPtr material2 = std::make_shared<material::Silver>();
-        MaterializedModelPtr materialized_model2 =
-            std::make_unique<MaterializedModel>(std::move(model2), material2);
-        Transform t2;
-        t2.rotation.x = -90.0f;
-        plane = std::make_unique<Entity>(std::move(materialized_model2), t2);
-
-        renderer.registerObject(plane.get());
-
         // point_lights
+        for (int i = 0; i < 3; ++i) {
+            ModelPtr model = std::make_unique<Model>();
+            model->load(primitive::sphere(1.0f, 25));
+            Transform t;
+            const float pos_m = 20.0f;
+            t.position =
+                glm::vec3(rg.random<-1, 1>() * pos_m, rg.random_0_1() * pos_m,
+                          rg.random<-1, 1>() * pos_m);
+            point_lights.push_back(std::move(std::make_unique<PointLight>(
+                std::move(model), t,
+                PhongLight{
+                    {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
+                PointLight::Attenuation{1.0f, 0.045f, 0.0075f})));
+        }
+
         ModelPtr model3 = std::make_unique<Model>();
         model3->load(primitive::sphere(1.0f, 25));
         Transform t3;
         t3.position.y = 4.0f;
+        /*
         point_light = std::make_unique<PointLight>(
             std::move(model3), t3,
             PhongLight{
                 {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
             PointLight::Attenuation{1.0f, 0.09f, 0.032f});
+            */
+
+        point_light = std::make_unique<PointLight>(
+            std::move(model3), t3,
+            PhongLight{
+                {0.2f, 0.2f, 0.0f}, {0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f}},
+            PhysicalLight::Attenuation{1.0f, 0.09f, 0.032f});
 
         renderer.registerObject(point_light.get());
         // dir light
+        /*
         dir_light = std::make_unique<DirLight>(
             PhongLight{
-                {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
+                {0.1f, 0.1f, 0.1f}, {0.25f, 0.25f, 0.25f}, {0.5f, 0.5f, 0.5f}},
             glm::vec3{0, -1, 1});
         renderer.registerObject(dir_light.get());
-        // spot light
-        ModelPtr model4 = std::make_unique<Model>();
-        model4->load(primitive::sphere(1.0f, 25));
-        Transform t4;
-        t4.position.y = 4.0f;
-        spot_light = std::make_unique<SpotLight>(
-            std::move(model4), t4,
-            PhongLight{
-                {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
-            glm::vec3{0, -1, 1}, 12.5f, 30.0f);
-        renderer.registerObject(spot_light.get());
-        global_light = std::make_unique<Light>(
-            PhongLight{
-                {0.2f, 0.2f, 0.2f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
+         */
+        // spot lights
+        {
+            auto createSpotLight = [&](const Transform& t,
+                                       const glm::vec3& direction) {
+                ModelPtr model = std::make_unique<Model>();
+                model->load(primitive::sphere(1.0f, 25));
+                spot_lights.push_back(std::move(std::make_unique<SpotLight>(
+                    std::move(model), t,
+                    PhongLight{{0.2f, 0.2f, 0.2f},
+                               {0.5f, 0.5f, 0.5f},
+                               {1.0f, 1.0f, 1.0f}},
+                    direction, 12.5f, 30.0f,
+                    PhysicalLight::Attenuation{1.0f, 0.022f, 0.0019f})));
+            };
+            for (int i = 0; i < 3; ++i) {
+                Transform t;
+                const float pos_m = 15.0f;
+                t.position = glm::vec3(rg.random<-1, 1>() * pos_m,
+                                       rg.random_0_1() * pos_m,
+                                       rg.random<-1, 1>() * pos_m);
+                auto direction = glm::vec3(
+                    rg.random<-1, 1>(), rg.random<-1, 1>(), rg.random<-1, 1>());
+                createSpotLight(t, direction);
+            }
+        }
+        global_light = std::make_unique<Light>(PhongLight{
+            {0.1f, 0.1f, 0.1f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
         renderer.setGlobalLight(global_light.get());
+
+        for (auto& e : entities) {
+            renderer.registerObject(e.get());
+        }
+        for (auto& point_light : point_lights) {
+            renderer.registerObject(point_light.get());
+        }
+        for (auto& s : spot_lights) {
+            renderer.registerObject(s.get());
+        }
     };
 
     void moveLight() {
@@ -153,10 +215,10 @@ private:
     MasterRenderer renderer;
 
     std::vector<EntityPtr> entities;
-    EntityPtr plane;
     PointLightPtr point_light;
+    std::vector<PointLightPtr> point_lights;
     DirLightPtr dir_light;
-    SpotLightPtr spot_light;
+    std::vector<SpotLightPtr> spot_lights;
     LightPtr global_light;
 };
 

@@ -35,32 +35,34 @@ using LightPtr = std::unique_ptr<Light>;
 
 class PhysicalLight : public Light, public Transformable {
 public:
-    PhysicalLight(const PhongLight &phong_light, ModelPtr model,
-                  const Transform &t)
-        : Light(phong_light), Transformable(t), model(std::move(model)) {}
-    const Model &getModel() const { return *model; }
-
-protected:
-    ModelPtr model;
-};
-
-class PointLight : public PhysicalLight {
-public:
     struct Attenuation {
         float constant;
         float linear;
         float quadratic;
     };
-    PointLight(ModelPtr model, const Transform &t,
-               const PhongLight &phong_light, const Attenuation &attenuation)
-        : PhysicalLight(phong_light, std::move(model), t),
+    PhysicalLight(const PhongLight &phong_light, ModelPtr model,
+                  const Transform &t, const Attenuation &attenuation)
+        : Light(phong_light),
+          Transformable(t),
+          model(std::move(model)),
           attenuation(attenuation) {}
+    const Model &getModel() const { return *model; }
     float getConstant() const { return attenuation.constant; }
     float getLinear() const { return attenuation.linear; }
     float getQuadratic() const { return attenuation.quadratic; }
 
-private:
+protected:
+    ModelPtr model;
     Attenuation attenuation;
+};
+
+class PointLight : public PhysicalLight {
+public:
+    PointLight(ModelPtr model, const Transform &t,
+               const PhongLight &phong_light, const Attenuation &attenuation)
+        : PhysicalLight(phong_light, std::move(model), t, attenuation) {}
+
+private:
 };
 
 using PointLightPtr = std::unique_ptr<PointLight>;
@@ -68,8 +70,8 @@ using PointLightPtr = std::unique_ptr<PointLight>;
 class SpotLight : public PhysicalLight {
 public:
     SpotLight(ModelPtr model, const Transform &t, const PhongLight &phong_light,
-              const glm::vec3 &direction, float cut_off, float outer_cut_off)
-        : PhysicalLight(phong_light, std::move(model), t),
+              const glm::vec3 &direction, float cut_off, float outer_cut_off, const Attenuation& attenuation)
+        : PhysicalLight(phong_light, std::move(model), t, attenuation),
           direction(direction),
           cut_off(cut_off),
           outer_cut_off(outer_cut_off) {}

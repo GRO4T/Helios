@@ -28,18 +28,16 @@ void EntityRenderer::render(std::vector<Entity*>& entities,
         prepareInstance(*entity);
 
         shader.setVec3("camera_position", camera.getPosition());
-        if (dir_light != nullptr) shader.setDirLight("dir_light", *dir_light);
-        for (const auto& light : point_lights) {
-            shader.setPointLight("point_light", *light);
-        }
-        for (const auto& light : spot_lights) {
-            shader.setSpotLight("spot_light", *light);
-        }
+        if (dir_light != nullptr) shader.setDirLight(*dir_light);
+        shader.setPointLights(point_lights);
+        shader.setSpotLights(spot_lights);
         if (global_light != nullptr)
             shader.setGlobalLight("global_light", *global_light);
 
         model.draw();
         unbind(model);
+        shader.resetPointLights(point_lights);
+        shader.resetSpotLights(spot_lights);
         renderChildren(*entity, transform_matrix);
     }
 }

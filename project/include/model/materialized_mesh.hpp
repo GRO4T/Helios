@@ -4,26 +4,26 @@
 #include <vector>
 
 #include "model/material.hpp"
-#include "model/model.hpp"
+#include "model/mesh.hpp"
 #include "texture/texture.hpp"
 #include "texture/texture_manager.hpp"
 
 namespace game_engine {
 
-class MaterializedModel {
+class MaterializedMesh {
 public:
-    MaterializedModel(ModelPtr model, MaterialSPtr material)
+    MaterializedMesh(MeshPtr model, MaterialSPtr material)
         : model(std::move(model)), material(material) {}
-    ~MaterializedModel() {}
-    const Model& getModel() const { return *model; }
+    ~MaterializedMesh() {}
+    const Mesh& getModel() const { return *model; }
     Material& getMaterial() const { return *material; }
 
 private:
-    ModelPtr model;
+    MeshPtr model;
     MaterialSPtr material;
 };
 
-using MaterializedModelPtr = std::unique_ptr<MaterializedModel>;
-using MaterializedModelSPtr = std::shared_ptr<MaterializedModel>;
+using MaterializedMeshPtr = std::unique_ptr<MaterializedMesh>;
+using MaterializedMeshSPtr = std::shared_ptr<MaterializedMesh>;
 
 }  // namespace game_engine

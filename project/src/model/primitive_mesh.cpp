@@ -1,64 +1,76 @@
-#include "model/primitive.hpp"
-
-#include <cmath>
-
-// clang-format off
+#include "model/primitive_mesh.hpp"
 
 namespace game_engine {
 namespace primitive {
 
 static const double PI = 3.14159265;
 
-ModelData cube(float s) {
-    return cuboid(s, s, s);
+// clang-format off
+
+std::vector<Vertex> cube(float s) { return cuboid(s, s, s); }
+
+std::vector<Vertex> cuboid(float w, float h, float d) {
+    static std::vector<glm::vec3> normals{{0, 0, 1},  {1, 0, 0}, {0, 0, -1},
+                                          {-1, 0, 0}, {0, 1, 0}, {0, -1, 0}};
+    static std::vector<glm::vec2> uvs{{0, 0}, {0, 1}, {1, 0},
+                                      {1, 0}, {0, 1}, {1, 1}};
+    static std::vector<glm::vec3> positions{
+        {w * -0.5f, h *  0.5f, d *  0.5f},
+        {w * -0.5f, h * -0.5f, d *  0.5f},
+        {w *  0.5f, h *  0.5f, d *  0.5f},
+        {w *  0.5f, h *  0.5f, d *  0.5f},
+        {w * -0.5f, h * -0.5f, d *  0.5f},
+        {w *  0.5f, h * -0.5f, d *  0.5f},
+
+        {w *  0.5f, h *  0.5f, d *  0.5f},
+        {w *  0.5f, h * -0.5f, d *  0.5f},
+        {w *  0.5f, h *  0.5f, d * -0.5f},
+        {w *  0.5f, h *  0.5f, d * -0.5f},
+        {w *  0.5f, h * -0.5f, d *  0.5f},
+        {w *  0.5f, h * -0.5f, d * -0.5f},
+
+        {w *  0.5f, h *  0.5f, d * -0.5f},
+        {w *  0.5f, h * -0.5f, d * -0.5f},
+        {w * -0.5f, h *  0.5f, d * -0.5f},
+        {w * -0.5f, h *  0.5f, d * -0.5f},
+        {w *  0.5f, h * -0.5f, d * -0.5f},
+        {w * -0.5f, h * -0.5f, d * -0.5f},
+
+        {w * -0.5f, h *  0.5f, d * -0.5f},
+        {w * -0.5f, h * -0.5f, d * -0.5f},
+        {w * -0.5f, h *  0.5f, d *  0.5f},
+        {w * -0.5f, h *  0.5f, d *  0.5f},
+        {w * -0.5f, h * -0.5f, d * -0.5f},
+        {w * -0.5f, h * -0.5f, d *  0.5f},
+
+        {w * -0.5f, h *  0.5f, d * -0.5f},
+        {w * -0.5f, h *  0.5f, d *  0.5f},
+        {w *  0.5f, h *  0.5f, d * -0.5f},
+        {w *  0.5f, h *  0.5f, d * -0.5f},
+        {w * -0.5f, h *  0.5f, d *  0.5f},
+        {w *  0.5f, h *  0.5f, d *  0.5f},
+
+        {w * -0.5f, h * -0.5f, d *  0.5f},
+        {w * -0.5f, h * -0.5f, d * -0.5f},
+        {w *  0.5f, h * -0.5f, d *  0.5f},
+        {w *  0.5f, h * -0.5f, d *  0.5f},
+        {w * -0.5f, h * -0.5f, d * -0.5f},
+        {w *  0.5f, h * -0.5f, d * -0.5f}
+    };
+    std::vector<Vertex> vertices;
+    vertices.reserve(36);
+    for (int i = 0; i < 6; ++i) {
+        for (int j = 0; j < 6; ++j) {
+            Vertex vertex;
+            vertex.position = positions[6*i + j];
+            vertex.uv = uvs[j];
+            vertex.normal = normals[i];
+            vertices.push_back(vertex);
+        }
+    }
+    return vertices;
 }
-
-ModelData cuboid(float w, float h, float d) {
-    return ModelData({
-                     w * -0.5f, h *  0.5f, d *  0.5f,   0.0f, 0.0f,    0.0f,  0.0f,  1.0f,
-                     w * -0.5f, h * -0.5f, d *  0.5f,   0.0f, 1.0f,    0.0f,  0.0f,  1.0f,
-                     w *  0.5f, h *  0.5f, d *  0.5f,   1.0f, 0.0f,    0.0f,  0.0f,  1.0f,
-                     w *  0.5f, h *  0.5f, d *  0.5f,   1.0f, 0.0f,    0.0f,  0.0f,  1.0f,
-                     w * -0.5f, h * -0.5f, d *  0.5f,   0.0f, 1.0f,    0.0f,  0.0f,  1.0f,
-                     w *  0.5f, h * -0.5f, d *  0.5f,   1.0f, 1.0f,    0.0f,  0.0f,  1.0f,
-
-                     w *  0.5f, h *  0.5f, d *  0.5f,   0.0f, 0.0f,    1.0f,  0.0f,  0.0f,
-                     w *  0.5f, h * -0.5f, d *  0.5f,   0.0f, 1.0f,    1.0f,  0.0f,  0.0f,
-                     w *  0.5f, h *  0.5f, d * -0.5f,   1.0f, 0.0f,    1.0f,  0.0f,  0.0f,
-                     w *  0.5f, h *  0.5f, d * -0.5f,   1.0f, 0.0f,    1.0f,  0.0f,  0.0f,
-                     w *  0.5f, h * -0.5f, d *  0.5f,   0.0f, 1.0f,    1.0f,  0.0f,  0.0f,
-                     w *  0.5f, h * -0.5f, d * -0.5f,   1.0f, 1.0f,    1.0f,  0.0f,  0.0f,
-
-                     w *  0.5f, h *  0.5f, d * -0.5f,   0.0f, 0.0f,    0.0f,  0.0f, -1.0f,
-                     w *  0.5f, h * -0.5f, d * -0.5f,   0.0f, 1.0f,    0.0f,  0.0f, -1.0f,
-                     w * -0.5f, h *  0.5f, d * -0.5f,   1.0f, 0.0f,    0.0f,  0.0f, -1.0f,
-                     w * -0.5f, h *  0.5f, d * -0.5f,   1.0f, 0.0f,    0.0f,  0.0f, -1.0f,
-                     w *  0.5f, h * -0.5f, d * -0.5f,   0.0f, 1.0f,    0.0f,  0.0f, -1.0f,
-                     w * -0.5f, h * -0.5f, d * -0.5f,   1.0f, 1.0f,    0.0f,  0.0f, -1.0f,
-
-                     w * -0.5f, h *  0.5f, d * -0.5f,   0.0f, 0.0f,   -1.0f,  0.0f,  0.0f,
-                     w * -0.5f, h * -0.5f, d * -0.5f,   0.0f, 1.0f,   -1.0f,  0.0f,  0.0f,
-                     w * -0.5f, h *  0.5f, d *  0.5f,   1.0f, 0.0f,   -1.0f,  0.0f,  0.0f,
-                     w * -0.5f, h *  0.5f, d *  0.5f,   1.0f, 0.0f,   -1.0f,  0.0f,  0.0f,
-                     w * -0.5f, h * -0.5f, d * -0.5f,   0.0f, 1.0f,   -1.0f,  0.0f,  0.0f,
-                     w * -0.5f, h * -0.5f, d *  0.5f,   1.0f, 1.0f,   -1.0f,  0.0f,  0.0f,
-
-                     w * -0.5f, h *  0.5f, d * -0.5f,   0.0f, 0.0f,    0.0f,  1.0f,  0.0f,
-                     w * -0.5f, h *  0.5f, d *  0.5f,   0.0f, 1.0f,    0.0f,  1.0f,  0.0f,
-                     w *  0.5f, h *  0.5f, d * -0.5f,   1.0f, 0.0f,    0.0f,  1.0f,  0.0f,
-                     w *  0.5f, h *  0.5f, d * -0.5f,   1.0f, 0.0f,    0.0f,  1.0f,  0.0f,
-                     w * -0.5f, h *  0.5f, d *  0.5f,   0.0f, 1.0f,    0.0f,  1.0f,  0.0f,
-                     w *  0.5f, h *  0.5f, d *  0.5f,   1.0f, 1.0f,    0.0f,  1.0f,  0.0f,
-
-                     w * -0.5f, h * -0.5f, d *  0.5f,   0.0f, 0.0f,    0.0f, -1.0f,  0.0f,
-                     w * -0.5f, h * -0.5f, d * -0.5f,   0.0f, 1.0f,    0.0f, -1.0f,  0.0f,
-                     w *  0.5f, h * -0.5f, d *  0.5f,   1.0f, 0.0f,    0.0f, -1.0f,  0.0f,
-                     w *  0.5f, h * -0.5f, d *  0.5f,   1.0f, 0.0f,    0.0f, -1.0f,  0.0f,
-                     w * -0.5f, h * -0.5f, d * -0.5f,   0.0f, 1.0f,    0.0f, -1.0f,  0.0f,
-                     w *  0.5f, h * -0.5f, d * -0.5f,   1.0f, 1.0f,    0.0f, -1.0f,  0.0f,
-                 });
-}
-
+/*
 ModelData cylinder(float diameter, float height, unsigned int sides) {
     if (sides < 3) sides = 3;
     ModelData vertices;
@@ -107,11 +119,12 @@ ModelData cylinder(float diameter, float height, unsigned int sides) {
     }
     return vertices;
 }
+ */
 
-ModelData sphere(float diameter, unsigned int sides) {
+std::vector<Vertex> sphere(float diameter, unsigned int sides) {
     if (sides < 3) sides = 3;
-    ModelData vertices;
-    vertices.reserve(8 * 6 * sides * sides);
+    std::vector<Vertex> vertices;
+    vertices.reserve(6 * sides * sides);
     for (unsigned int i = 0; i < sides; ++i) {
         float r = i / static_cast<float>(sides);
         float nr = (i + 1) / static_cast<float>(sides);
@@ -140,20 +153,21 @@ ModelData sphere(float diameter, unsigned int sides) {
             float lnz = static_cast<float>(cos(r * 2 * PI));
             float nlnz = static_cast<float>(cos(nr * 2 * PI));
 
-            float slice[8 * 6] = {
-                hx,  y,  hz,      r,  d,     lnx *  xzs,  lny,  lnz *  xzs,
-                lx, ny,  lz,      r, nd,     lnx * nxzs, nlny,  lnz * nxzs,
-                nhx,  y, nhz,     nr,  d,    nlnx *  xzs,  lny, nlnz *  xzs,
-                nhx,  y, nhz,     nr,  d,    nlnx *  xzs,  lny, nlnz *  xzs,
-                lx, ny,  lz,      r, nd,     lnx * nxzs, nlny,  lnz * nxzs,
-                nlx, ny, nlz,     nr, nd,    nlnx * nxzs, nlny, nlnz * nxzs,
-            };
-            vertices.insert(vertices.end(), slice, slice + 8 * 6);
-
+            // clang-format on
+            Vertex slice[6] = {
+                {{hx, y, hz}, {lnx * xzs, lny, lnz * xzs}, {r, d}},
+                {{lx, ny, lz}, {lnx * nxzs, nlny, lnz * nxzs}, {r, nd}},
+                {{nhx, y, nhz}, {nlnx * xzs, lny, nlnz * xzs}, {nr, d}},
+                {{nhx, y, nhz}, {nlnx * xzs, lny, nlnz * xzs}, {nr, d}},
+                {{lx, ny, lz}, {lnx * nxzs, nlny, lnz * nxzs}, {r, nd}},
+                {{nlx, ny, nlz}, {nlnx * nxzs, nlny, nlnz * nxzs}, {nr, nd}}};
+            vertices.insert(vertices.end(), slice, slice + 6);
+            // clang-format off
         }
     }
     return vertices;
 }
+/*
 
 ModelData cone(float diameter, float height, unsigned int sides) {
     if (sides < 3) sides = 3;
@@ -205,12 +219,13 @@ ModelData cone(float diameter, float height, unsigned int sides) {
     }
     return vertices;
 }
+ */
 
-ModelData plane(float w, float h, unsigned int w_segments, unsigned int h_segments) {
+std::vector<Vertex> plane(float w, float h, unsigned int w_segments, unsigned int h_segments) {
     if (w_segments < 1) w_segments = 1;
     if (h_segments < 1) h_segments = 1;
-    ModelData vertices;
-    vertices.reserve(8 * 6 * w_segments * h_segments);
+    std::vector<Vertex> vertices;
+    vertices.reserve(6 * w_segments * h_segments);
     for (unsigned int i = 0; i < w_segments; ++i) {
         for (unsigned int u = 0; u < h_segments; ++u) {
             float x = i / static_cast<float>(w_segments);
@@ -222,32 +237,18 @@ ModelData plane(float w, float h, unsigned int w_segments, unsigned int h_segmen
             y = (-1.0f + 2 * y);
             ny = (-1.0f + 2 * ny);
 
-            float slice[8 * 6] = {
-                w *  x, h *  y, 0.0f,   0.0f, 0.0f,    0.0f,  0.0f,  1.0f,
-                w *  x, h * ny, 0.0f,   0.0f, 1.0f,    0.0f,  0.0f,  1.0f,
-                w * nx, h *  y, 0.0f,   1.0f, 0.0f,    0.0f,  0.0f,  1.0f,
-                w * nx, h *  y, 0.0f,   1.0f, 0.0f,    0.0f,  0.0f,  1.0f,
-                w *  x, h * ny, 0.0f,   0.0f, 1.0f,    0.0f,  0.0f,  1.0f,
-                w * nx, h * ny, 0.0f,   1.0f, 1.0f,    0.0f,  0.0f,  1.0f,
-            };
-            vertices.insert(vertices.end(), slice, slice + 8 * 6);
+            // clang-format on
+            Vertex slice[6] = {
+                {{w * x, h * y, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
+                {{w * x, h * ny, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+                {{w * nx, h * y, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+                {{w * nx, h * y, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+                {{w * x, h * ny, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+                {{w * nx, h * ny, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}}};
+            vertices.insert(vertices.end(), slice, slice + 6);
         }
     }
     return vertices;
-}
-
-ModelData cubemap() {
-    return cuboid(2.0f, 2.0f, 2.0f);
-}
-
-// clang-format on
-
-void invert_normals(ModelData &shape) {
-    for (int i = 0; i < shape.size(); ++i) {
-        if (i % 8 >= 5) {
-            shape[i] = -shape[i];
-        }
-    }
 }
 
 }  // namespace primitive

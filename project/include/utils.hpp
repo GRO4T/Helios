@@ -1,14 +1,14 @@
 #pragma once
 
+#include <ctime>
 #include <iostream>
 #include <memory>
+#include <random>
 #include <vector>
 
 #include "camera.hpp"
 #include "opengl_all.hpp"
 #include "stb_image.h"
-#include <ctime>
-#include <random>
 
 // class Entity;
 
@@ -16,16 +16,10 @@ namespace game_engine {
 
 namespace utils {
 
-class Loader {
-public:
-    static Loader &getInstance();
-    static GLuint loadMipmapTexture(const char *filename);
-    static GLuint loadCubemap(const std::vector<std::string> &faces);
-
-private:
-    Loader();
-    Loader(const Loader &) = delete;
-    Loader &operator=(const Loader &) = delete;
+struct Vertex {
+    glm::vec3 position;
+    glm::vec3 normal;
+    glm::vec2 uv;
 };
 
 struct Transform {
@@ -86,10 +80,10 @@ glm::vec3 rotate_z(const glm::vec3 &v, float angle);
 
 class RandomNumberGenerator {
 public:
-    static RandomNumberGenerator& getInstance();
+    static RandomNumberGenerator &getInstance();
 
-    RandomNumberGenerator(const RandomNumberGenerator&) = delete;
-    RandomNumberGenerator& operator=(const RandomNumberGenerator&) = delete;
+    RandomNumberGenerator(const RandomNumberGenerator &) = delete;
+    RandomNumberGenerator &operator=(const RandomNumberGenerator &) = delete;
 
     float random_0_1();
 

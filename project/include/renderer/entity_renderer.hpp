@@ -16,7 +16,7 @@ public:
                 Light* global_light);
 
 private:
-    void unbind(const Model& model);
+    void unbind();
     void prepareInstance(const Entity& entity);
     void renderChildren(Entity& parent, glm::mat4 combined_transform);
 

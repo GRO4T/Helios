@@ -24,17 +24,11 @@ elseif (WIN32)
         include_directories(lib/win/64bit/include)
 
         link_directories(lib/win/64bit)
-
-        if (${MSVC_TOOLSET_VERSION} EQUAL 141)      #= VS 2017 (15.0)
-            link_directories(lib/win/64bit/glfw/lib-vc2017)
-        endif ()
-        if (${MSVC_TOOLSET_VERSION} EQUAL 142)      #= VS 2019
-            link_directories(lib/win/64bit/glfw/lib-vc2019)
-        endif ()
+        link_directories(lib/win/64bit/glfw/lib-vc2019)
 
         message(STATUS "Compiling for Windows 64bit")
     endif ()
-    set(LIBS glfw3 glew32s)
+    set(LIBS glfw3 glew32s assimp-vc142-mtd)
 endif ()
 
 include_directories(project/include)
@@ -49,7 +43,7 @@ add_library(
         project/include/game_engine.hpp
         project/src/stb_image.cpp
         project/include/renderer/master_renderer.hpp
-        project/src/renderer/master_renderer.cpp project/include/model/model.hpp project/include/model/primitive.hpp project/include/utils.hpp project/src/model/model.cpp project/src/model/primitive.cpp project/include/shader/shader_program.hpp project/src/shader/shader_program.cpp project/src/utils.cpp project/include/shader/entity_shader.hpp project/include/model/materialized_model.hpp project/include/texture/texture.hpp project/include/texture/texture_manager.hpp project/include/model/material.hpp project/src/texture/texture_manager.cpp project/include/entity/entity.hpp project/include/entity/abstract_entity.hpp project/include/renderer/entity_renderer.hpp project/src/renderer/entity_renderer.cpp project/include/renderer/light_renderer.hpp project/include/shader/light_shader.hpp project/include/light.hpp)
+        project/src/renderer/master_renderer.cpp project/include/model/mesh.hpp project/include/model/primitive_mesh.hpp project/include/utils.hpp project/src/model/mesh.cpp project/src/model/primitive_mesh.cpp project/include/shader/shader_program.hpp project/src/shader/shader_program.cpp project/src/utils.cpp project/include/shader/entity_shader.hpp project/include/model/materialized_mesh.hpp project/include/texture/texture.hpp project/include/texture/texture_manager.hpp project/include/model/material.hpp project/src/texture/texture_manager.cpp project/include/entity/entity.hpp project/include/entity/abstract_entity.hpp project/include/renderer/entity_renderer.hpp project/src/renderer/entity_renderer.cpp project/include/renderer/light_renderer.hpp project/include/shader/light_shader.hpp project/include/light.hpp project/include/model/model.hpp)
 
 target_link_libraries(game-engine OpenGL::GL ${LIBS})
 

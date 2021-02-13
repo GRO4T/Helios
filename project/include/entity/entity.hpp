@@ -1,6 +1,6 @@
 #pragma once
 
-#include <model/materialized_model.hpp>
+#include <model/materialized_mesh.hpp>
 #include <vector>
 
 #include "entity/abstract_entity.hpp"
@@ -13,7 +13,7 @@ using utils::Transform;
 class Entity : public AbstractEntity {
 public:
     Entity() {}
-    Entity(MaterializedModelPtr materialized_model, const Transform& transform)
+    Entity(MaterializedMeshPtr materialized_model, const Transform& transform)
         : AbstractEntity(transform),
           materialized_model(std::move(materialized_model)) {}
     Entity(const Entity&) = delete;
@@ -27,7 +27,7 @@ public:
      */
     virtual ~Entity() {}
 
-    MaterializedModel& getMaterializedModel() const override {
+    MaterializedMesh& getMaterializedModel() const override {
         return *materialized_model;
     }
 
@@ -36,7 +36,7 @@ public:
 
 private:
     Transform transform;
-    MaterializedModelPtr materialized_model;
+    MaterializedMeshPtr materialized_model;
 
     std::vector<AbstractEntitySharedPtr> children;
 };

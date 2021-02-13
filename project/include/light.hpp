@@ -1,6 +1,6 @@
 #pragma once
 
-#include "model/model.hpp"
+#include "model/mesh.hpp"
 #include "utils.hpp"
 
 namespace game_engine {
@@ -40,25 +40,25 @@ public:
         float linear;
         float quadratic;
     };
-    PhysicalLight(const PhongLight &phong_light, ModelPtr model,
+    PhysicalLight(const PhongLight &phong_light, MeshPtr model,
                   const Transform &t, const Attenuation &attenuation)
         : Light(phong_light),
           Transformable(t),
           model(std::move(model)),
           attenuation(attenuation) {}
-    const Model &getModel() const { return *model; }
+    const Mesh &getModel() const { return *model; }
     float getConstant() const { return attenuation.constant; }
     float getLinear() const { return attenuation.linear; }
     float getQuadratic() const { return attenuation.quadratic; }
 
 protected:
-    ModelPtr model;
+    MeshPtr model;
     Attenuation attenuation;
 };
 
 class PointLight : public PhysicalLight {
 public:
-    PointLight(ModelPtr model, const Transform &t,
+    PointLight(MeshPtr model, const Transform &t,
                const PhongLight &phong_light, const Attenuation &attenuation)
         : PhysicalLight(phong_light, std::move(model), t, attenuation) {}
 
@@ -69,7 +69,7 @@ using PointLightPtr = std::unique_ptr<PointLight>;
 
 class SpotLight : public PhysicalLight {
 public:
-    SpotLight(ModelPtr model, const Transform &t, const PhongLight &phong_light,
+    SpotLight(MeshPtr model, const Transform &t, const PhongLight &phong_light,
               const glm::vec3 &direction, float cut_off, float outer_cut_off, const Attenuation& attenuation)
         : PhysicalLight(phong_light, std::move(model), t, attenuation),
           direction(direction),

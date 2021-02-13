@@ -35,7 +35,7 @@ void EntityRenderer::render(std::vector<Entity*>& entities,
             shader.setGlobalLight("global_light", *global_light);
 
         model.draw();
-        unbind(model);
+        unbind();
         shader.resetPointLights(point_lights);
         shader.resetSpotLights(spot_lights);
         renderChildren(*entity, transform_matrix);
@@ -51,12 +51,12 @@ void EntityRenderer::renderChildren(Entity& parent,
         shader.setTransformationMatrix(combined_transform * transform_matrix);
         prepareInstance(entity);
         entity.getMaterializedModel().getModel().draw();
-        unbind(entity.getMaterializedModel().getModel());
+        unbind();
         renderChildren(entity, combined_transform * transform_matrix);
     }
 }
 
-void EntityRenderer::unbind(const Model& model) { glBindVertexArray(0); }
+void EntityRenderer::unbind() { glBindVertexArray(0); }
 
 void EntityRenderer::prepareInstance(const Entity& entity) {
     auto& materialized_model = entity.getMaterializedModel();

@@ -1,52 +1,52 @@
 #pragma once
 
-#include <memory>
-#include <vector>
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
-#include "opengl_all.hpp"
+#include <assimp/Importer.hpp>
+
+#include "model/materialized_mesh.hpp"
 
 namespace game_engine {
 
 class Model {
 public:
-    virtual ~Model();
-    void load(GLfloat vertices[], int v_count);
-    void load(std::vector<GLfloat>& shape);
-    void load(std::vector<GLfloat>&& shape);
-    GLuint getVao() const { return VAO; }
-    int getVertexCount() const { return vertex_count; }
-    virtual void draw() const { glDrawArrays(GL_TRIANGLES, 0, vertex_count); }
+    Model(const std::string& path) { load(path); }
+    void load(const std::string& path) {
+        Assimp::Importer import;
+        const aiScene* scene =
+            import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
-protected:
-    void storeDataInAttribList(GLuint attrib_number, GLuint vector_len,
-                               std::vector<GLfloat>& data);
+        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE ||
+            !scene->mRootNode) {
+            cout << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
+            return;
+        }
+        directory = path.substr(0, path.find_last_of('/'));
 
-    int vertex_count;
-    GLuint VAO;
-};
-
-class IndexedModel : public Model {
-public:
-    virtual void draw() const override {
-        glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, (void*)0);
+        processNode(scene->mRootNode, scene);
     }
-    void load(std::vector<GLfloat>& vertices, std::vector<GLfloat>& normals,
-              std::vector<GLfloat>& tex_coords, std::vector<GLuint>& indices);
 
-protected:
-    int index_count;
-};
+    std::vector<MaterializedMesh> meshes;
 
-class StripedModel : public IndexedModel {
-public:
-    void draw() const override {
-        glDrawElements(GL_TRIANGLE_STRIP, index_count, GL_UNSIGNED_INT,
-                       (void*)0);
+private:
+    void processNode(aiNode* node, const aiScene* scene) {
+        for (unsigned int i = 0; i < node->mNumMeshes; ++i) {
+            aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
+            meshes.push_back(processMesh(mesh, scene));
+        }
+        for (unsigned int i = 0; i < node->mNumChildren; ++i) {
+            processNode(node->mChildren[i], scene);
+        }
+    }
+    MaterializedMesh processMesh(aiMesh* mesh, const aiScene* scene) {
+        std::vector<float> vertices;
+        std::vector<float> normals;
+        std::vector<float> uvs;
+        std::vector<GLuint> indices;
+
+        //for (unsigned int)
     }
 };
-
-using ModelPtr = std::unique_ptr<Model>;
-using IndexedModelPtr = std::unique_ptr<IndexedModel>;
-using StripedModelPtr = std::unique_ptr<StripedModel>;
 
 }  // namespace game_engine

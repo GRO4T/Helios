@@ -1,47 +1,36 @@
-#include "model/model.hpp"
+#include "model/mesh.hpp"
 
-#include "model/primitive.hpp"
+#include "model/primitive_mesh.hpp"
 
 namespace game_engine {
 
-Model::~Model() { glDeleteVertexArrays(1, &VAO); }
+Mesh::~Mesh() { glDeleteVertexArrays(1, &VAO); }
 
-void Model::load(GLfloat vertices[], int v_count) {
+void Mesh::load(const std::vector<Vertex>& vertices) {
     GLuint VBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * v_count, vertices,
-                 GL_STATIC_DRAW);
-    // Bind the Vertex Array Object first, then bind and set vertex buffer(s)
-    // and attribute pointer(s).
+
     glBindVertexArray(VAO);
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-                          (void *)0);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+
+    // vertex positions
     glEnableVertexAttribArray(0);
-    // texture coord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-                          (void *)(3 * sizeof(float)));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    // vertex normals
     glEnableVertexAttribArray(1);
-    // normal attribute
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-                          (void *)(5 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+    // vertex texture coords
     glEnableVertexAttribArray(2);
-    glBindVertexArray(0);  // Unbind VAO (it's always a good thing to unbind any
-    // buffer/array to prevent strange bugs)
-    vertex_count = v_count;
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+
+    glBindVertexArray(0);
+    vertex_count = vertices.size();
 }
 
-void Model::load(ModelData &shape) {
-    load(shape.data(), static_cast<int>(shape.size()));
-}
-
-void Model::load(ModelData &&shape) {
-    load(shape.data(), static_cast<int>(shape.size()));
-}
-
-void IndexedModel::load(std::vector<GLfloat> &vertices,
+void IndexedMesh::load(std::vector<GLfloat> &vertices,
                         std::vector<GLfloat> &normals,
                         std::vector<GLfloat> &tex_coords,
                         std::vector<GLuint> &indices) {
@@ -60,7 +49,7 @@ void IndexedModel::load(std::vector<GLfloat> &vertices,
     index_count = static_cast<int>(indices.size());
 }
 
-void Model::storeDataInAttribList(GLuint attrib_number, GLuint vector_len,
+void Mesh::storeDataInAttribList(GLuint attrib_number, GLuint vector_len,
                                   std::vector<GLfloat> &data) {
     GLuint VBO;
     glGenBuffers(1, &VBO);

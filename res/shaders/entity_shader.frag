@@ -3,10 +3,10 @@
 struct Material {
     vec3 ambient;
     bool is_diffuse_map;
-    sampler2D diffuse_map;
+    sampler2D diffuse_map0;
     vec3 diffuse;
     bool is_specular_map;
-    sampler2D specular_map;
+    sampler2D specular_map0;
     vec3 specular;
     float shininess;
 };
@@ -143,7 +143,7 @@ vec3 calculateSpotLight(SpotLight light) {
 
 void calculateMaterial(out vec3 material_ambient, out vec3 material_diffuse, out vec3 material_specular) {
     if (material.is_diffuse_map) {
-        material_diffuse = texture(material.diffuse_map, p_uv).xyz;
+        material_diffuse = texture(material.diffuse_map0, p_uv).xyz;
         material_ambient = material_diffuse;
     }
     else {
@@ -151,7 +151,7 @@ void calculateMaterial(out vec3 material_ambient, out vec3 material_diffuse, out
         material_ambient = material.ambient;
     }
     if (material.is_specular_map) {
-        material_specular = texture(material.specular_map, p_uv).xyz;
+        material_specular = texture(material.specular_map0, p_uv).xyz;
     }
     else {
         material_specular = material.specular;

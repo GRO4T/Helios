@@ -1,8 +1,8 @@
 #pragma once
 
 #include <entity/entity.hpp>
-#include <model/model.hpp>
-#include <model/primitive.hpp>
+#include <model/mesh.hpp>
+#include <model/primitive_mesh.hpp>
 #include <shader/entity_shader.hpp>
 
 #include "camera.hpp"

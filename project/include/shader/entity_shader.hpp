@@ -16,26 +16,33 @@ public:
                         "res/shaders/entity_shader.frag") {}
 
     void setMaterial(const std::string& name, const Material& material) const {
-        setBool(name + ".is_diffuse_map", material.isDiffuseMap());
-        if (material.isDiffuseMap()) {
-            setInt(name + ".diffuse_map", 0);
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D,
-                          material.getDiffuseMap()->getTexture());
+        int i = 0, diffuse_id = 0, specular_id = 0;
+        if (material.diffuse_maps.size() > 0) {
+            setBool(name + ".is_diffuse_map", true);
+            for (const auto& dm : material.diffuse_maps) {
+                setInt(name + ".diffuse_map" + std::to_string(diffuse_id++), i);
+                glActiveTexture(GL_TEXTURE0 + i);
+                glBindTexture(GL_TEXTURE_2D, dm->getId());
+                ++i;
+            }
         } else {
-            setVec3(name + ".diffuse", material.getDiffuse());
+            setBool(name + ".is_diffuse_map", false);
+            setVec3(name + ".diffuse", material.diffuse);
         }
-        setVec3(name + ".ambient", material.getAmbient());
-        setBool(name + ".is_specular_map", material.isSpecularMap());
-        if (material.isSpecularMap()) {
-            setInt(name + ".specular_map", 1);
-            glActiveTexture(GL_TEXTURE0 + 1);
-            glBindTexture(GL_TEXTURE_2D,
-                          material.getSpecularMap()->getTexture());
+        setVec3(name + ".ambient", material.ambient);
+        if (material.specular_maps.size() > 0) {
+            setBool(name + ".is_specular_map", true);
+            for (const auto& sm : material.specular_maps) {
+                setInt(name + ".specular_map" + std::to_string(specular_id++), i);
+                glActiveTexture(GL_TEXTURE0 + i);
+                glBindTexture(GL_TEXTURE_2D, sm->getId());
+                ++i;
+            }
         } else {
-            setVec3(name + ".specular", material.getSpecular());
+            setBool(name + ".is_specular_map", false);
+            setVec3(name + ".specular", material.specular);
         }
-        setFloat(name + ".shininess", material.getShininess());
+        setFloat(name + ".shininess", material.shininess);
     }
 
     void setPointLight(const PointLight& light, int index) const {

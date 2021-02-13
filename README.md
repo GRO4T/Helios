@@ -8,15 +8,20 @@
 #### GLEW
 ```
 sudo apt install libglew-dev
-```
-#### glm
-```
 sudo apt install libglm-dev
-```
-#### GLFW3
-```
 sudo apt install libglfw3-dev
+sudo apt install assimp
 ```
+### Windows
+#### GLEW, glm, GLFW3
+provided statically
+#### Assimp
+* download sources from: http://assimp.org/index.php/downloads
+* generate Visual Studio Solution using CMake
+* compile using Visual Studio
+* copy .lib and .dll files (from lib/ and bin/) <br>
+
+**dll should finally be in the same directory as an executable**
 
 ## Useful
 ### Point light attenuation

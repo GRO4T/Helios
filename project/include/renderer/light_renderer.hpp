@@ -31,7 +31,7 @@ public:
     }
 
 private:
-    void unbind(const Model& model) { glBindVertexArray(0); }
+    void unbind(const Mesh& model) { glBindVertexArray(0); }
     void prepareInstance(const PhysicalLight& light) {
         glBindVertexArray(light.getModel().getVao());
         shader.setLight("light", light);

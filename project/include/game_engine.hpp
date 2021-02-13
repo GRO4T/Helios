@@ -58,16 +58,12 @@ private:
         // cubes
         auto& rg = utils::RandomNumberGenerator::getInstance();
         for (int i = 0; i < 40; ++i) {
-            ModelPtr model = std::make_unique<Model>();
-            model->load(primitive::cube(1.0f));
+            MeshPtr model = std::make_unique<Mesh>(primitive::cube(1.0f));
             MaterialSPtr material = std::make_shared<material::Silver>();
-            material
-                ->setDiffuseMap(
-                    &texture_manager.getTexture("res/wood_metal_container.jpg"))
-                .setSpecularMap(&texture_manager.getTexture(
-                    "res/wood_metal_container_specular.jpg"));
-            MaterializedModelPtr materialized_model =
-                std::make_unique<MaterializedModel>(std::move(model), material);
+            material->setDiffuseMaps({"res/wood_metal_container.jpg"});
+            material->setSpecularMaps({"res/wood_metal_container_specular.jpg"});
+            MaterializedMeshPtr materialized_model =
+                std::make_unique<MaterializedMesh>(std::move(model), material);
             Transform t;
             const float pos_m = 20.0f;
             t.position =
@@ -76,19 +72,13 @@ private:
             entities.push_back(std::move(
                 std::make_unique<Entity>(std::move(materialized_model), t)));
         }
-
         // planes
         {
             auto create_plane = [&](const Transform& t) {
-                ModelPtr model = std::make_unique<Model>();
-                model->load(primitive::plane(20, 20, 4, 4));
-                /*
-                MaterialSPtr material = std::make_shared<material::Silver>(
-                    &texture_manager.getTexture("res/metal.jpg"));
-                    */
+                MeshPtr model = std::make_unique<Mesh>(primitive::plane(20, 20, 4, 4));
                 MaterialSPtr material = std::make_shared<material::Silver>();
-                MaterializedModelPtr materialized_model =
-                    std::make_unique<MaterializedModel>(std::move(model),
+                MaterializedMeshPtr materialized_model =
+                    std::make_unique<MaterializedMesh>(std::move(model),
                                                         material);
                 entities.push_back(std::move(std::make_unique<Entity>(
                     std::move(materialized_model), t)));
@@ -112,8 +102,7 @@ private:
 
         // point_lights
         for (int i = 0; i < 3; ++i) {
-            ModelPtr model = std::make_unique<Model>();
-            model->load(primitive::sphere(1.0f, 25));
+            MeshPtr model = std::make_unique<Mesh>(primitive::sphere(1.0f, 25));
             Transform t;
             const float pos_m = 20.0f;
             t.position =
@@ -126,8 +115,7 @@ private:
                 PointLight::Attenuation{1.0f, 0.045f, 0.0075f})));
         }
 
-        ModelPtr model3 = std::make_unique<Model>();
-        model3->load(primitive::sphere(1.0f, 25));
+        MeshPtr model3 = std::make_unique<Mesh>(primitive::sphere(1.0f, 25));
         Transform t3;
         t3.position.y = 4.0f;
         /*
@@ -157,8 +145,7 @@ private:
         {
             auto createSpotLight = [&](const Transform& t,
                                        const glm::vec3& direction) {
-                ModelPtr model = std::make_unique<Model>();
-                model->load(primitive::sphere(1.0f, 25));
+                MeshPtr model = std::make_unique<Mesh>(primitive::sphere(1.0f, 25));
                 spot_lights.push_back(std::move(std::make_unique<SpotLight>(
                     std::move(model), t,
                     PhongLight{{0.2f, 0.2f, 0.2f},

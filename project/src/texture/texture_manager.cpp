@@ -20,9 +20,4 @@ Texture& TextureManager::getTexture(const std::string& filepath) {
     }
 }
 
-void TextureManager::loadTexture(const std::string& filepath) {
-    TextureSPtr texture = std::make_shared<Texture>(filepath);
-    texture_map.insert(std::pair(filepath, texture));
-}
-
 }  // namespace game_engine

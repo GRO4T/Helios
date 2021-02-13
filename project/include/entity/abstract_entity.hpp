@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <model/materialized_model.hpp>
+#include <model/materialized_mesh.hpp>
 
 #include "utils.hpp"
 
@@ -40,7 +40,7 @@ class AbstractEntity : public Transformable {
 public:
     AbstractEntity() {}
     AbstractEntity(const Transform& t) : Transformable(t) {}
-    virtual const MaterializedModel& getMaterializedModel() const = 0;
+    virtual const MaterializedMesh& getMaterializedModel() const = 0;
     virtual ~AbstractEntity() {}
 };
 

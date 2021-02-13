@@ -12,7 +12,6 @@ class TextureManager {
 public:
     static TextureManager& getInstance();
     static Texture& getTexture(const std::string& filepath);
-    static void loadTexture(const std::string& filepath);
 
 private:
     TextureManager() {}

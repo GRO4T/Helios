@@ -11,7 +11,7 @@ if (UNIX)
         cmake_policy(SET CMP0072 NEW)
     endif ()
     find_package(OpenGL REQUIRED)
-    set(LIBS glfw GLEW)
+    set(LIBS glfw GLEW assimp)
     message(STATUS "Compiling for Linux 64bit")
 elseif (WIN32)
     add_link_options(/NODEFAULTLIB:LIBCMT) # https://stackoverflow.com/questions/3007312/resolving-lnk4098-defaultlib-msvcrt-conflicts-with

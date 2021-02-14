@@ -43,12 +43,12 @@ std::ostream &operator<<(std::ostream &os, const glm::mat4 &mx) {
     return os;
 }
 
-std::ostream &utils::operator<<(std::ostream &os, const glm::vec4 &vec) {
+std::ostream &operator<<(std::ostream &os, const glm::vec4 &vec) {
     os << vec.r << " " << vec.g << " " << vec.b << " " << vec.a;
     return os;
 }
 
-std::ostream &utils::operator<<(std::ostream &os, const glm::vec3 &vec) {
+std::ostream &operator<<(std::ostream &os, const glm::vec3 &vec) {
     os << vec.x << " " << vec.y << " " << vec.z;
     return os;
 }

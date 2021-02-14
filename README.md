@@ -7,7 +7,7 @@
 ### Linux
 #### GLEW
 ```
-sudo apt install libglew-dev & libglm-dev & libglfw3-dev & libassimp-dev
+sudo apt install libglew-dev libglm-dev libglfw3-dev libassimp-dev
 ```
 ### Windows
 #### GLEW, glm, GLFW3

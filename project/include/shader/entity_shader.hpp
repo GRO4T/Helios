@@ -22,7 +22,7 @@ public:
             for (const auto& dm : material.diffuse_maps) {
                 setInt(name + ".diffuse_map" + std::to_string(diffuse_id++), i);
                 glActiveTexture(GL_TEXTURE0 + i);
-                glBindTexture(GL_TEXTURE_2D, dm->getId());
+                glBindTexture(GL_TEXTURE_2D, dm->getTextureId());
                 ++i;
             }
         } else {
@@ -35,7 +35,7 @@ public:
             for (const auto& sm : material.specular_maps) {
                 setInt(name + ".specular_map" + std::to_string(specular_id++), i);
                 glActiveTexture(GL_TEXTURE0 + i);
-                glBindTexture(GL_TEXTURE_2D, sm->getId());
+                glBindTexture(GL_TEXTURE_2D, sm->getTextureId());
                 ++i;
             }
         } else {

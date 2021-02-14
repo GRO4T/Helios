@@ -27,7 +27,7 @@ void Mesh::load(const std::vector<Vertex>& vertices) {
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
 
     glBindVertexArray(0);
-    vertex_count = vertices.size();
+    vertex_count = GLsizei(vertices.size());
 }
 
 void IndexedMesh::load(const std::vector<Vertex> &vertices,
@@ -57,8 +57,8 @@ void IndexedMesh::load(const std::vector<Vertex> &vertices,
 
     glBindVertexArray(0);
 
-    vertex_count = vertices.size();
-    index_count = indices.size();
+    vertex_count = GLsizei(vertices.size());
+    index_count = GLsizei(indices.size());
 }
 
 void Mesh::storeDataInAttribList(GLuint attrib_number, GLuint vector_len,

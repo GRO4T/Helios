@@ -17,14 +17,14 @@ public:
     virtual ~Mesh();
     void load(const std::vector<Vertex>& vertices);
     GLuint getVao() const { return VAO; }
-    int getVertexCount() const { return vertex_count; }
+    std::size_t getVertexCount() const { return vertex_count; }
     virtual void draw() const { glDrawArrays(GL_TRIANGLES, 0, vertex_count); }
 
 protected:
     void storeDataInAttribList(GLuint attrib_number, GLuint vector_len,
                                std::vector<GLfloat>& data);  // not used
 
-    int vertex_count;
+    GLsizei vertex_count;
     GLuint VAO;
 };
 
@@ -41,7 +41,7 @@ public:
               const std::vector<GLuint>& indices);
 
 protected:
-    int index_count;
+    GLsizei index_count;
 };
 
 class StripedMesh : public IndexedMesh {

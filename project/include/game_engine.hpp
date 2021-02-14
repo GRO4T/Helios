@@ -30,7 +30,7 @@ public:
         return success;
     }
     void run() {
-        std::srand(std::time(0));
+        std::srand(uint32_t(std::time(0)));
         createScene();
         while (!display_manager.windowShouldClose()) {
             double delta_time = display_manager.getDeltaTime();
@@ -66,7 +66,6 @@ private:
 
         // cubes
         auto& rg = utils::RandomNumberGenerator::getInstance();
-        /*
         for (int i = 0; i < 40; ++i) {
             MeshPtr mesh = std::make_unique<Mesh>(primitive_mesh::cube(1.0f));
             MaterialSPtr material = std::make_shared<material::Silver>();
@@ -85,7 +84,6 @@ private:
             entities.push_back(std::move(
                 std::make_unique<Entity>(std::move(model), t)));
         }
-         */
         // planes
         {
             auto create_plane = [&](const Transform& t) {
@@ -108,11 +106,13 @@ private:
             t.position = glm::vec3(0, 10, -20);
             create_plane(t);
             t.position.z = 20.0f;
+            t.rotation.y = 180.0f;
             create_plane(t);
-            t.rotation.y = 90.0f;
+            t.rotation.y = 270.0f;
             t.position = glm::vec3(20, 0, 0);
             create_plane(t);
             t.position.x = -20;
+            t.rotation.y = 90.0f;
             create_plane(t);
         }
         // point_lights
@@ -131,31 +131,45 @@ private:
                 PointLight::Attenuation{1.0f, 0.045f, 0.0075f})));
         }
 
-        MeshPtr model3 =
-            std::make_unique<Mesh>(primitive_mesh::sphere(1.0f, 25));
-        Transform t3;
-        t3.position.y = 4.0f;
-        /*
-        point_light = std::make_unique<PointLight>(
-            std::move(model3), t3,
-            PhongLight{
-                {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
-            PointLight::Attenuation{1.0f, 0.09f, 0.032f});
-            */
+        // moveable point light
+        {
+            MeshPtr mesh =
+                std::make_unique<Mesh>(primitive_mesh::sphere(1.0f, 25));
+            Transform t;
+            t.position.y = 4.0f;
+            /*
+            point_light = std::make_unique<PointLight>(
+                std::move(mesh), t,
+                PhongLight{
+                    {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
+                PointLight::Attenuation{1.0f, 0.09f, 0.032f});
+                */
 
+            point_light = std::make_unique<PointLight>(
+                std::move(mesh), t,
+                PhongLight{
+                    {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}},
+                PointLight::Attenuation{1.0f, 0.09f, 0.032f});
+/*
         point_light = std::make_unique<PointLight>(
-            std::move(model3), t3,
+            std::move(mesh), t,
             PhongLight{
                 {0.2f, 0.2f, 0.0f}, {0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f}},
             PhysicalLight::Attenuation{1.0f, 0.09f, 0.032f});
+            */
 
-        renderer.registerObject(point_light.get());
+            renderer.registerObject(point_light.get());
+        }
+
         // dir light
-        dir_light = std::make_unique<DirLight>(
-            PhongLight{
-                {0.1f, 0.1f, 0.1f}, {0.25f, 0.25f, 0.25f}, {0.5f, 0.5f, 0.5f}},
-            glm::vec3{0, -1, 1});
-        renderer.registerObject(dir_light.get());
+        {
+            dir_light = std::make_unique<DirLight>(
+                PhongLight{
+                    {0.1f, 0.1f, 0.1f}, {0.25f, 0.25f, 0.25f}, {0.5f, 0.5f, 0.5f}},
+                glm::vec3{0, -1, 1});
+            renderer.registerObject(dir_light.get());
+        }
+
         // spot lights
         {
             auto createSpotLight = [&](const Transform& t,
@@ -181,13 +195,17 @@ private:
                 createSpotLight(t, direction);
             }
         }
-        /*
-        global_light = std::make_unique<Light>(PhongLight{
-            {0.1f, 0.1f, 0.1f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
-            */
-        global_light = std::make_unique<Light>(PhongLight{
-            {0.4f, 0.4f, 0.4f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
-        renderer.setGlobalLight(global_light.get());
+
+        // global light
+        {
+            global_light = std::make_unique<Light>(PhongLight{
+                {0.1f, 0.1f, 0.1f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
+                /*
+            global_light = std::make_unique<Light>(PhongLight{
+                {0.4f, 0.4f, 0.4f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
+                */
+            renderer.setGlobalLight(global_light.get());
+        }
 
         for (auto& e : entities) {
             renderer.registerObject(e.get());

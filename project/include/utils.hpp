@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <ctime>
 #include <iostream>
 #include <memory>
@@ -15,6 +16,23 @@
 namespace game_engine {
 
 namespace utils {
+
+class Benchmark {
+public:
+    void start() {
+        start_ = std::chrono::steady_clock::now();
+    }
+    void end() {
+        end_ = std::chrono::steady_clock::now();
+    }
+    template<class ChronoUnit>
+    int64_t getElapsedTime() {
+        return std::chrono::duration_cast<ChronoUnit>(end_ - start_).count();
+    }
+private:
+    std::chrono::time_point<std::chrono::steady_clock> start_;
+    std::chrono::time_point<std::chrono::steady_clock> end_;
+};
 
 struct Vertex {
     glm::vec3 position;
@@ -46,14 +64,14 @@ public:
     int getWidth() const { return width; }
     int getHeight() const { return height; }
     int getNrChannels() const { return nr_channels; }
-    unsigned char *getData() const { return data.get(); }
+    uint8_t *getData() const { return data.get(); }
     float getRGB(int x, int y) const {
-        unsigned bytes_per_pixel = nr_channels;
-        unsigned char *pixel_offset =
+        uint32_t bytes_per_pixel = nr_channels;
+        uint8_t *pixel_offset =
             data.get() + (y * width + x) * bytes_per_pixel;
-        unsigned char r = pixel_offset[0];
-        unsigned char g = pixel_offset[1];
-        unsigned char b = pixel_offset[2];
+        uint8_t r = pixel_offset[0];
+        uint8_t g = pixel_offset[1];
+        uint8_t b = pixel_offset[2];
         return (float)(r * g * b);
     }
 

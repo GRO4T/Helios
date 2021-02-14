@@ -37,7 +37,7 @@ public:
         global_light = light;
     }
 
-    void render(const Camera& camera, float time);
+    void render(const Camera& camera, double time);
 
 private:
     static glm::mat4 projection_matrix;

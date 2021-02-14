@@ -1,8 +1,10 @@
 #pragma once
 
 #include <memory>
-#include <model/materialized_mesh.hpp>
 
+#include "entity.hpp"
+#include "model/materialized_mesh.hpp"
+#include "model/model.hpp"
 #include "utils.hpp"
 
 namespace game_engine {
@@ -40,7 +42,7 @@ class AbstractEntity : public Transformable {
 public:
     AbstractEntity() {}
     AbstractEntity(const Transform& t) : Transformable(t) {}
-    virtual const MaterializedMesh& getMaterializedModel() const = 0;
+    virtual Model& getModel() const = 0;
     virtual ~AbstractEntity() {}
 };
 

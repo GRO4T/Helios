@@ -1,7 +1,7 @@
 #include "model/primitive_mesh.hpp"
 
 namespace game_engine {
-namespace primitive {
+namespace primitive_mesh {
 
 static const double PI = 3.14159265;
 

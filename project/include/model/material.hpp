@@ -11,22 +11,10 @@ namespace game_engine {
 
 class Material {
 public:
-    void setDiffuseMaps(const std::vector<std::string>& tex_paths) {
-        for (const auto& tp : tex_paths) {
-            diffuse_maps.push_back(&TextureManager::getInstance().getTexture(tp));
-        }
-    }
-
-    void setSpecularMaps(const std::vector<std::string>& tex_paths) {
-        for (const auto& tp : tex_paths) {
-            specular_maps.push_back(&TextureManager::getInstance().getTexture(tp));
-        }
-    }
-
     glm::vec3 ambient;
-    std::vector<Texture*> diffuse_maps;
+    std::vector<TextureSPtr> diffuse_maps;
     glm::vec3 diffuse;
-    std::vector<Texture*> specular_maps;
+    std::vector<TextureSPtr> specular_maps;
     glm::vec3 specular;
     float shininess;
 };

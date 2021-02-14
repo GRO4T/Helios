@@ -12,14 +12,14 @@ namespace game_engine {
 
 class MaterializedMesh {
 public:
-    MaterializedMesh(MeshPtr model, MaterialSPtr material)
-        : model(std::move(model)), material(material) {}
+    MaterializedMesh(MeshPtr mesh, MaterialSPtr material)
+        : mesh(std::move(mesh)), material(material) {}
     ~MaterializedMesh() {}
-    const Mesh& getModel() const { return *model; }
+    const Mesh& getMesh() const { return *mesh; }
     Material& getMaterial() const { return *material; }
 
 private:
-    MeshPtr model;
+    MeshPtr mesh;
     MaterialSPtr material;
 };
 

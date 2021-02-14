@@ -19,21 +19,21 @@ public:
         shader.setViewMatrix(camera);
 
         for (auto& light : lights) {
-            const auto& model = light->getModel();
+            const auto& mesh = light->getMesh();
             glm::mat4 transform_matrix;
             utils::createTransformMatrix(transform_matrix,
                                          light->getTransform());
             shader.setTransformationMatrix(transform_matrix);
             prepareInstance(*light);
-            model.draw();
-            unbind(model);
+            mesh.draw();
+            unbind(mesh);
         }
     }
 
 private:
     void unbind(const Mesh& model) { glBindVertexArray(0); }
     void prepareInstance(const PhysicalLight& light) {
-        glBindVertexArray(light.getModel().getVao());
+        glBindVertexArray(light.getMesh().getVao());
         shader.setLight("light", light);
     }
 

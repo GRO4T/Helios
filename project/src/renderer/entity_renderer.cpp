@@ -20,26 +20,29 @@ void EntityRenderer::render(std::vector<Entity*>& entities,
     shader.use();
     shader.setViewMatrix(camera);
 
+    shader.setVec3("camera_position", camera.getPosition());
+    if (dir_light != nullptr) shader.setDirLight(*dir_light);
+    shader.setPointLights(point_lights);
+    shader.setSpotLights(spot_lights);
+    if (global_light != nullptr)
+        shader.setGlobalLight("global_light", *global_light);
+
     for (auto& entity : entities) {
-        const auto& model = entity->getMaterializedModel().getModel();
         glm::mat4 transform_matrix;
         utils::createTransformMatrix(transform_matrix, entity->getTransform());
         shader.setTransformationMatrix(transform_matrix);
-        prepareInstance(*entity);
 
-        shader.setVec3("camera_position", camera.getPosition());
-        if (dir_light != nullptr) shader.setDirLight(*dir_light);
-        shader.setPointLights(point_lights);
-        shader.setSpotLights(spot_lights);
-        if (global_light != nullptr)
-            shader.setGlobalLight("global_light", *global_light);
-
-        model.draw();
-        unbind();
-        shader.resetPointLights(point_lights);
-        shader.resetSpotLights(spot_lights);
+        for (const auto& materialized_mesh : entity->getModel().meshes) {
+            glBindVertexArray(materialized_mesh->getMesh().getVao());
+            shader.setMaterial("material", materialized_mesh->getMaterial());
+            materialized_mesh->getMesh().draw();
+            unbind();
+        }
         renderChildren(*entity, transform_matrix);
     }
+
+    shader.resetPointLights(point_lights);
+    shader.resetSpotLights(spot_lights);
 }
 
 void EntityRenderer::renderChildren(Entity& parent,
@@ -49,20 +52,17 @@ void EntityRenderer::renderChildren(Entity& parent,
         glm::mat4 transform_matrix;
         utils::createTransformMatrix(transform_matrix, entity.getTransform());
         shader.setTransformationMatrix(combined_transform * transform_matrix);
-        prepareInstance(entity);
-        entity.getMaterializedModel().getModel().draw();
-        unbind();
+
+        for (const auto& materialized_mesh : entity.getModel().meshes) {
+            glBindVertexArray(materialized_mesh->getMesh().getVao());
+            shader.setMaterial("material", materialized_mesh->getMaterial());
+            materialized_mesh->getMesh().draw();
+            unbind();
+        }
         renderChildren(entity, combined_transform * transform_matrix);
     }
 }
 
 void EntityRenderer::unbind() { glBindVertexArray(0); }
-
-void EntityRenderer::prepareInstance(const Entity& entity) {
-    auto& materialized_model = entity.getMaterializedModel();
-    const auto& material = materialized_model.getMaterial();
-    glBindVertexArray(materialized_model.getModel().getVao());
-    shader.setMaterial("material", material);
-}
 
 }  // namespace game_engine

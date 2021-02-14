@@ -9,14 +9,14 @@ TextureManager& TextureManager::getInstance() {
     return instance;
 }
 
-Texture& TextureManager::getTexture(const std::string& filepath) {
+TextureSPtr TextureManager::getTexture(const std::string& filepath) {
     auto it = texture_map.find(filepath);
     if (it != texture_map.end()) {
-        return *it->second;
+        return it->second;
     } else {
         TextureSPtr texture = std::make_shared<Texture>(filepath);
         texture_map.insert(std::pair(filepath, texture));
-        return *texture;
+        return texture;
     }
 }
 

@@ -12,6 +12,7 @@ using utils::Vertex;
 
 class Mesh {
 public:
+    Mesh() {}
     Mesh(const std::vector<Vertex>& vertices) { load(vertices); }
     virtual ~Mesh();
     void load(const std::vector<Vertex>& vertices);
@@ -29,11 +30,15 @@ protected:
 
 class IndexedMesh : public Mesh {
 public:
+    IndexedMesh(const std::vector<Vertex>& vertices,
+                const std::vector<GLuint>& indices) {
+        load(vertices, indices);
+    }
     virtual void draw() const override {
         glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, (void*)0);
     }
-    void load(std::vector<GLfloat>& vertices, std::vector<GLfloat>& normals,
-              std::vector<GLfloat>& tex_coords, std::vector<GLuint>& indices);
+    void load(const std::vector<Vertex>& vertices,
+              const std::vector<GLuint>& indices);
 
 protected:
     int index_count;

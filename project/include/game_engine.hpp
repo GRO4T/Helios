@@ -55,33 +55,49 @@ private:
     }
 
     void createScene() {
+        // complex model
+        {
+            ModelPtr model = std::make_unique<Model>("res/backpack/backpack.obj");
+            Transform t;
+            t.position.y = 5.0f;
+            entities.push_back(
+                std::move(std::make_unique<Entity>(std::move(model), t)));
+        }
+
         // cubes
         auto& rg = utils::RandomNumberGenerator::getInstance();
+        /*
         for (int i = 0; i < 40; ++i) {
-            MeshPtr model = std::make_unique<Mesh>(primitive::cube(1.0f));
+            MeshPtr mesh = std::make_unique<Mesh>(primitive_mesh::cube(1.0f));
             MaterialSPtr material = std::make_shared<material::Silver>();
-            material->setDiffuseMaps({"res/wood_metal_container.jpg"});
-            material->setSpecularMaps({"res/wood_metal_container_specular.jpg"});
-            MaterializedMeshPtr materialized_model =
-                std::make_unique<MaterializedMesh>(std::move(model), material);
+            material->diffuse_maps = {
+                texture_manager.getTexture("res/wood_metal_container.jpg")};
+            material->specular_maps.push_back(texture_manager.getTexture(
+                "res/wood_metal_container_specular.jpg"));
+            std::vector<MaterializedMeshSPtr> meshes = {
+                std::make_unique<MaterializedMesh>(std::move(mesh), material)};
+            ModelPtr model = std::make_unique<Model>(meshes);
             Transform t;
             const float pos_m = 20.0f;
             t.position =
                 glm::vec3(rg.random<-1, 1>() * pos_m, rg.random_0_1() * pos_m,
                           rg.random<-1, 1>() * pos_m);
             entities.push_back(std::move(
-                std::make_unique<Entity>(std::move(materialized_model), t)));
+                std::make_unique<Entity>(std::move(model), t)));
         }
+         */
         // planes
         {
             auto create_plane = [&](const Transform& t) {
-                MeshPtr model = std::make_unique<Mesh>(primitive::plane(20, 20, 4, 4));
+                MeshPtr mesh =
+                    std::make_unique<Mesh>(primitive_mesh::plane(20, 20, 4, 4));
                 MaterialSPtr material = std::make_shared<material::Silver>();
-                MaterializedMeshPtr materialized_model =
-                    std::make_unique<MaterializedMesh>(std::move(model),
-                                                        material);
-                entities.push_back(std::move(std::make_unique<Entity>(
-                    std::move(materialized_model), t)));
+                std::vector<MaterializedMeshSPtr> meshes = {
+                    std::make_unique<MaterializedMesh>(std::move(mesh),
+                                                       material)};
+                ModelPtr model = std::make_unique<Model>(meshes);
+                entities.push_back(
+                    std::move(std::make_unique<Entity>(std::move(model), t)));
             };
             Transform t;
             t.rotation.x = -90.0f;
@@ -99,23 +115,24 @@ private:
             t.position.x = -20;
             create_plane(t);
         }
-
         // point_lights
         for (int i = 0; i < 3; ++i) {
-            MeshPtr model = std::make_unique<Mesh>(primitive::sphere(1.0f, 25));
+            MeshPtr mesh =
+                std::make_unique<Mesh>(primitive_mesh::sphere(1.0f, 25));
             Transform t;
             const float pos_m = 20.0f;
             t.position =
                 glm::vec3(rg.random<-1, 1>() * pos_m, rg.random_0_1() * pos_m,
                           rg.random<-1, 1>() * pos_m);
             point_lights.push_back(std::move(std::make_unique<PointLight>(
-                std::move(model), t,
+                std::move(mesh), t,
                 PhongLight{
                     {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
                 PointLight::Attenuation{1.0f, 0.045f, 0.0075f})));
         }
 
-        MeshPtr model3 = std::make_unique<Mesh>(primitive::sphere(1.0f, 25));
+        MeshPtr model3 =
+            std::make_unique<Mesh>(primitive_mesh::sphere(1.0f, 25));
         Transform t3;
         t3.position.y = 4.0f;
         /*
@@ -134,18 +151,17 @@ private:
 
         renderer.registerObject(point_light.get());
         // dir light
-        /*
         dir_light = std::make_unique<DirLight>(
             PhongLight{
                 {0.1f, 0.1f, 0.1f}, {0.25f, 0.25f, 0.25f}, {0.5f, 0.5f, 0.5f}},
             glm::vec3{0, -1, 1});
         renderer.registerObject(dir_light.get());
-         */
         // spot lights
         {
             auto createSpotLight = [&](const Transform& t,
                                        const glm::vec3& direction) {
-                MeshPtr model = std::make_unique<Mesh>(primitive::sphere(1.0f, 25));
+                MeshPtr model =
+                    std::make_unique<Mesh>(primitive_mesh::sphere(1.0f, 25));
                 spot_lights.push_back(std::move(std::make_unique<SpotLight>(
                     std::move(model), t,
                     PhongLight{{0.2f, 0.2f, 0.2f},
@@ -165,8 +181,12 @@ private:
                 createSpotLight(t, direction);
             }
         }
+        /*
         global_light = std::make_unique<Light>(PhongLight{
             {0.1f, 0.1f, 0.1f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
+            */
+        global_light = std::make_unique<Light>(PhongLight{
+            {0.4f, 0.4f, 0.4f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
         renderer.setGlobalLight(global_light.get());
 
         for (auto& e : entities) {

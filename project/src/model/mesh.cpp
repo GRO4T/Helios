@@ -30,23 +30,35 @@ void Mesh::load(const std::vector<Vertex>& vertices) {
     vertex_count = vertices.size();
 }
 
-void IndexedMesh::load(std::vector<GLfloat> &vertices,
-                        std::vector<GLfloat> &normals,
-                        std::vector<GLfloat> &tex_coords,
-                        std::vector<GLuint> &indices) {
+void IndexedMesh::load(const std::vector<Vertex> &vertices,
+                       const std::vector<GLuint> &indices) {
+    GLuint VBO, EBO;
     glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-    GLuint EBO;
+    glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(),
-                 indices.data(), GL_STATIC_DRAW);
-    storeDataInAttribList(0, 3, vertices);
-    storeDataInAttribList(1, 2, tex_coords);
-    storeDataInAttribList(2, 3, normals);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
+                 &indices[0], GL_STATIC_DRAW);
+
+    // vertex positions
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    // vertex normals
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+    // vertex texture coords
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+
     glBindVertexArray(0);
-    vertex_count = static_cast<int>(vertices.size()) / 3;
-    index_count = static_cast<int>(indices.size());
+
+    vertex_count = vertices.size();
+    index_count = indices.size();
 }
 
 void Mesh::storeDataInAttribList(GLuint attrib_number, GLuint vector_len,

@@ -7,7 +7,7 @@
 
 namespace game_engine {
 
-namespace primitive {
+namespace primitive_mesh {
 
 std::vector<Vertex> cube(float size = 1.0);
 std::vector<Vertex> cuboid(float width, float height, float depth);

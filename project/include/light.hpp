@@ -40,19 +40,19 @@ public:
         float linear;
         float quadratic;
     };
-    PhysicalLight(const PhongLight &phong_light, MeshPtr model,
+    PhysicalLight(const PhongLight &phong_light, MeshPtr mesh,
                   const Transform &t, const Attenuation &attenuation)
         : Light(phong_light),
           Transformable(t),
-          model(std::move(model)),
+          mesh(std::move(mesh)),
           attenuation(attenuation) {}
-    const Mesh &getModel() const { return *model; }
+    const Mesh &getMesh() const { return *mesh; }
     float getConstant() const { return attenuation.constant; }
     float getLinear() const { return attenuation.linear; }
     float getQuadratic() const { return attenuation.quadratic; }
 
 protected:
-    MeshPtr model;
+    MeshPtr mesh;
     Attenuation attenuation;
 };
 

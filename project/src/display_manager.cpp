@@ -7,6 +7,15 @@
 namespace game_engine {
 
 GLFWwindow* DisplayManager::window;
+int DisplayManager::width, DisplayManager::height;
+double DisplayManager::last_update;
+double DisplayManager::delta_time;
+bool DisplayManager::first_mouse;
+double DisplayManager::mouse_sensitivity_y;
+double DisplayManager::mouse_sensitivity_x;
+double DisplayManager::last_mouse_x, DisplayManager::last_mouse_y;
+double DisplayManager::mouse_dx, DisplayManager::mouse_dy;
+double DisplayManager::scroll_x, DisplayManager::scroll_y;
 
 DisplayManager& DisplayManager::getInstance() {
     static DisplayManager instance;
@@ -20,15 +29,19 @@ void DisplayManager::init() {
     }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 }
 void DisplayManager::createDisplay(int width, int height) {
+    DisplayManager::width = width;
+    DisplayManager::height = height;
     window = glfwCreateWindow(width, height, "Game Engine", nullptr, nullptr);
     if (window == nullptr) throw std::runtime_error("GLFW window not created");
     glfwMakeContextCurrent(window);
     glfwSetCursorPosCallback(window, cursorPositionCallback);
     glfwSetKeyCallback(window, keyCallback);
     glfwSetScrollCallback(window, scrollCallback);
+    glfwSetWindowFocusCallback(window, windowFocusCallback);
+    glfwSetCursorEnterCallback(window, cursorEnterCallback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
@@ -39,7 +52,8 @@ void DisplayManager::createDisplay(int width, int height) {
 
 void DisplayManager::handleEvents() {
     if (isKeyPressed(GLFW_KEY_ESCAPE)) {
-        glfwSetWindowShouldClose(window, GL_TRUE);
+        glfwSetWindowAttrib(window, GLFW_FOCUSED, GLFW_FALSE);
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
     glfwPollEvents();
 }
@@ -69,10 +83,6 @@ void DisplayManager::close() {
 
 void DisplayManager::cursorPositionCallback(GLFWwindow* window, double pos_x,
                                             double pos_y) {
-    DisplayManager::getInstance().updateMouseDelta(pos_x, pos_y);
-}
-
-void DisplayManager::updateMouseDelta(double pos_x, double pos_y) {
     if (first_mouse) {
         last_mouse_x = pos_x;
         last_mouse_y = pos_y;
@@ -98,11 +108,40 @@ void DisplayManager::keyCallback(GLFWwindow* window, int key, int scancode,
 }
 void DisplayManager::scrollCallback(GLFWwindow* window, double offset_x,
                                     double offset_y) {
-    DisplayManager::getInstance().updateScroll(offset_x, offset_y);
-}
-void DisplayManager::updateScroll(double offset_x, double offset_y) {
     scroll_x = offset_x;
     scroll_y = offset_y;
+}
+
+void DisplayManager::windowFocusCallback(GLFWwindow* window, int focused) {
+    std::cout << "window focus callback\n";
+    if (focused) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+}
+
+void DisplayManager::cursorEnterCallback(GLFWwindow* window, int entered) {
+    std::cout << "cursor enter callback\n";
+}
+
+void DisplayManager::mouseButtonCallback(GLFWwindow* window, int button,
+                                         int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_LEFT) {
+        int window_x, window_y;
+        glfwGetWindowPos(window, &window_x, &window_y);
+    }
+}
+
+void DisplayManager::increaseMouseSensitivity(double delta) {
+    mouse_sensitivity_x =
+        std::clamp(mouse_sensitivity_x + delta, 0.0, MAX_MOUSE_SENSITIVITY);
+    mouse_sensitivity_y =
+        std::clamp(mouse_sensitivity_y + delta, 0.0, MAX_MOUSE_SENSITIVITY);
+}
+void DisplayManager::decreaseMouseSensitivity(double delta) {
+    mouse_sensitivity_x =
+        std::clamp(mouse_sensitivity_x - delta, 0.0, MAX_MOUSE_SENSITIVITY);
+    mouse_sensitivity_y =
+        std::clamp(mouse_sensitivity_y - delta, 0.0, MAX_MOUSE_SENSITIVITY);
 }
 
 }  // namespace game_engine

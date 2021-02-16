@@ -15,6 +15,7 @@ public:
     }
 
     void render(std::vector<PhysicalLight*>& lights, const Camera& camera) {
+        glClear(GL_STENCIL_BUFFER_BIT);
         shader.use();
         shader.setViewMatrix(camera);
 
@@ -34,7 +35,7 @@ private:
     void unbind(const Mesh& model) { glBindVertexArray(0); }
     void prepareInstance(const PhysicalLight& light) {
         glBindVertexArray(light.getMesh().getVao());
-        shader.setLight("light", light);
+        shader.setLight(light);
     }
 
     LightShader shader;

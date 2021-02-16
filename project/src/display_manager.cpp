@@ -37,11 +37,14 @@ void DisplayManager::createDisplay(int width, int height) {
     window = glfwCreateWindow(width, height, "Game Engine", nullptr, nullptr);
     if (window == nullptr) throw std::runtime_error("GLFW window not created");
     glfwMakeContextCurrent(window);
+
     glfwSetCursorPosCallback(window, cursorPositionCallback);
     glfwSetKeyCallback(window, keyCallback);
     glfwSetScrollCallback(window, scrollCallback);
     glfwSetWindowFocusCallback(window, windowFocusCallback);
     glfwSetCursorEnterCallback(window, cursorEnterCallback);
+    glfwSetMouseButtonCallback(window, mouseButtonCallback);
+
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
@@ -52,7 +55,6 @@ void DisplayManager::createDisplay(int width, int height) {
 
 void DisplayManager::handleEvents() {
     if (isKeyPressed(GLFW_KEY_ESCAPE)) {
-        glfwSetWindowAttrib(window, GLFW_FOCUSED, GLFW_FALSE);
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
     glfwPollEvents();
@@ -113,14 +115,11 @@ void DisplayManager::scrollCallback(GLFWwindow* window, double offset_x,
 }
 
 void DisplayManager::windowFocusCallback(GLFWwindow* window, int focused) {
-    std::cout << "window focus callback\n";
-    if (focused) {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    }
+    // std::cout << "window focus callback\n";
 }
 
 void DisplayManager::cursorEnterCallback(GLFWwindow* window, int entered) {
-    std::cout << "cursor enter callback\n";
+    // std::cout << "cursor enter callback\n";
 }
 
 void DisplayManager::mouseButtonCallback(GLFWwindow* window, int button,
@@ -128,6 +127,11 @@ void DisplayManager::mouseButtonCallback(GLFWwindow* window, int button,
     if (button == GLFW_MOUSE_BUTTON_LEFT) {
         int window_x, window_y;
         glfwGetWindowPos(window, &window_x, &window_y);
+        if (last_mouse_x >= window_x && last_mouse_x <= window_x + width &&
+            last_mouse_y >= window_y && last_mouse_y <= window_y + height) {
+            std::cout << "window clicked\n";
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
     }
 }
 

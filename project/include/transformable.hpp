@@ -38,15 +38,4 @@ protected:
     Transform transform;
 };
 
-class AbstractEntity : public Transformable {
-public:
-    AbstractEntity() {}
-    AbstractEntity(const Transform& t) : Transformable(t) {}
-    virtual Model& getModel() const = 0;
-    virtual ~AbstractEntity() {}
-};
-
-using AbstractEntityPtr = std::unique_ptr<AbstractEntity>;
-using AbstractEntitySharedPtr = std::shared_ptr<AbstractEntity>;
-
 }  // namespace game_engine

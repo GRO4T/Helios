@@ -2,32 +2,26 @@
 
 #include <vector>
 
-#include "entity/abstract_entity.hpp"
+#include "transformable.hpp"
 
 namespace game_engine {
 
 using utils::Transform;
 
-class Entity : public AbstractEntity {
+class Entity : public Transformable {
 public:
     Entity() {}
     Entity(ModelPtr model, const Transform& transform)
-        : AbstractEntity(transform),
+        : Transformable(transform),
           model(std::move(model)) {}
     Entity(const Entity&) = delete;
     Entity(Entity&& e) = delete;
     virtual ~Entity() {}
 
-    Model& getModel() const override { return *model; }
-
-    void addChild(AbstractEntitySharedPtr child) { children.push_back(child); }
-    std::vector<AbstractEntitySharedPtr>& getChildren() { return children; }
+    Model& getModel() const { return *model; }
 
 private:
-    Transform transform;
     ModelPtr model;
-
-    std::vector<AbstractEntitySharedPtr> children;
 };
 
 using EntityPtr = std::unique_ptr<Entity>;

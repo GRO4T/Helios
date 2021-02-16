@@ -1,6 +1,6 @@
 #pragma once
 
-#include <entity/entity.hpp>
+#include <entity.hpp>
 #include <model/mesh.hpp>
 #include <model/primitive_mesh.hpp>
 #include <shader/entity_shader.hpp>
@@ -14,28 +14,24 @@ namespace game_engine {
 
 class MasterRenderer {
 public:
-    MasterRenderer()
-        : entity_renderer(projection_matrix),
-          light_renderer(projection_matrix) {}
+    MasterRenderer();
 
     static void calculateProjectionMatrix(float fov, float znear, float zfar,
                                           float display_width,
                                           float display_height);
 
-    void registerObject(Entity* object) { entities.push_back(object); }
-    void registerObject(PointLight* object) {
-        point_lights.push_back(object);
-        physical_lights.push_back(object);
+    void registerObject(Entity& object) { entities.push_back(&object); }
+    void registerObject(PointLight& object) {
+        point_lights.push_back(&object);
+        physical_lights.push_back(&object);
     }
-    void registerObject(DirLight* object) { dir_light = object; }
-    void registerObject(SpotLight* object) {
-        spot_lights.push_back(object);
-        physical_lights.push_back(object);
+    void registerObject(DirLight& object) { dir_light = &object; }
+    void registerObject(SpotLight& object) {
+        spot_lights.push_back(&object);
+        physical_lights.push_back(&object);
     }
 
-    void setGlobalLight(Light* light) {
-        global_light = light;
-    }
+    void setGlobalLight(Light& light) { global_light = &light; }
 
     void render(const Camera& camera, double time);
 

@@ -15,7 +15,8 @@ public:
         : ShaderProgram("res/shaders/entity_shader.vert",
                         "res/shaders/entity_shader.frag") {}
 
-    void setMaterial(const std::string& name, const Material& material) const {
+    void setMaterial(const Material& material) const {
+        const std::string name = "material";
         int i = 0, diffuse_id = 0, specular_id = 0;
         if (material.diffuse_maps.size() > 0) {
             setBool(name + ".is_diffuse_map", true);
@@ -33,7 +34,8 @@ public:
         if (material.specular_maps.size() > 0) {
             setBool(name + ".is_specular_map", true);
             for (const auto& sm : material.specular_maps) {
-                setInt(name + ".specular_map" + std::to_string(specular_id++), i);
+                setInt(name + ".specular_map" + std::to_string(specular_id++),
+                       i);
                 glActiveTexture(GL_TEXTURE0 + i);
                 glBindTexture(GL_TEXTURE_2D, sm->getTextureId());
                 ++i;
@@ -58,13 +60,13 @@ public:
         setBool(point_light + ".enabled", true);
     }
 
-    void setPointLights(const std::vector<PointLight*> lights) {
+    void setPointLights(const std::vector<PointLight*> lights) const {
         for (int i = 0; const auto& light : lights) {
             setPointLight(*light, i++);
         }
     }
 
-    void resetPointLights(const std::vector<PointLight*> lights) {
+    void resetPointLights(const std::vector<PointLight*> lights) const {
         for (int i = 0; const auto& light : lights) {
             const std::string point_light =
                 "point_lights[" + std::to_string(i++) + "]";
@@ -98,13 +100,13 @@ public:
         setBool(spot_light + ".enabled", true);
     }
 
-    void setSpotLights(const std::vector<SpotLight*>& lights) {
+    void setSpotLights(const std::vector<SpotLight*>& lights) const {
         for (int i = 0; const auto& light : lights) {
             setSpotLight(*light, i++);
         }
     }
 
-    void resetSpotLights(const std::vector<SpotLight*>& lights) {
+    void resetSpotLights(const std::vector<SpotLight*>& lights) const {
         for (int i = 0; const auto& light : lights) {
             const std::string spot_light =
                 "spot_lights[" + std::to_string(i++) + "]";

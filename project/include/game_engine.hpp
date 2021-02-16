@@ -60,6 +60,7 @@ private:
             ModelPtr model = std::make_unique<Model>("res/backpack/backpack.obj");
             Transform t;
             t.position.y = 5.0f;
+            t.position.z = 30.0f;
             entities.push_back(
                 std::move(std::make_unique<Entity>(std::move(model), t)));
         }
@@ -158,7 +159,7 @@ private:
             PhysicalLight::Attenuation{1.0f, 0.09f, 0.032f});
             */
 
-            renderer.registerObject(point_light.get());
+            renderer.registerObject(*point_light);
         }
 
         // dir light
@@ -167,7 +168,7 @@ private:
                 PhongLight{
                     {0.1f, 0.1f, 0.1f}, {0.25f, 0.25f, 0.25f}, {0.5f, 0.5f, 0.5f}},
                 glm::vec3{0, -1, 1});
-            renderer.registerObject(dir_light.get());
+            renderer.registerObject(*dir_light);
         }
 
         // spot lights
@@ -204,17 +205,17 @@ private:
             global_light = std::make_unique<Light>(PhongLight{
                 {0.4f, 0.4f, 0.4f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
                 */
-            renderer.setGlobalLight(global_light.get());
+            renderer.setGlobalLight(*global_light);
         }
 
         for (auto& e : entities) {
-            renderer.registerObject(e.get());
+            renderer.registerObject(*e);
         }
         for (auto& point_light : point_lights) {
-            renderer.registerObject(point_light.get());
+            renderer.registerObject(*point_light);
         }
         for (auto& s : spot_lights) {
-            renderer.registerObject(s.get());
+            renderer.registerObject(*s);
         }
     };
 

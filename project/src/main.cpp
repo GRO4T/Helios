@@ -1,10 +1,4 @@
-#include <iostream>
-
 #include "game_engine.hpp"
-
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
 
 using namespace game_engine;
 

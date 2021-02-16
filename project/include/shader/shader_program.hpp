@@ -9,7 +9,6 @@ namespace game_engine {
 
 class ShaderProgram {
 public:
-    // Constructor reads and builds the shader
     ShaderProgram(const GLchar *vertex_path, const GLchar *fragment_path);
     virtual ~ShaderProgram() {}
 

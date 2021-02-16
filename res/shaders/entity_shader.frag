@@ -93,6 +93,7 @@ void main() {
         result += calculateSpotLight(spot_lights[i]);
     }
     frag_color = vec4(result, 1.0);
+    // frag_color = vec4(vec3(gl_FragCoord.z), 1.0); // uncomment to view z-buffer
 }
 
 vec3 calculateGlobalLight(GlobalLight light) {

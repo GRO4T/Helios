@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.3)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_BUILD_TYPE Debug)
-# set(CMAKE_BUILD_TYPE Release)
 
 project(game-engine)
 
@@ -31,23 +30,46 @@ elseif (WIN32)
     set(LIBS glfw3 glew32s assimp-vc142-mt)
 endif ()
 
-include_directories(project/include)
+include_directories(include)
 include_directories(lib/common/include)
 
 add_library(
         game-engine
-        project/include/camera.hpp
-        project/src/camera.cpp
-        project/include/display_manager.hpp
-        project/src/display_manager.cpp
-        project/include/game_engine.hpp
-        project/src/stb_image.cpp
-        project/include/renderer/master_renderer.hpp
-        project/src/renderer/master_renderer.cpp project/include/model/mesh.hpp project/include/model/primitive_mesh.hpp project/include/utils.hpp project/src/model/mesh.cpp project/src/model/primitive_mesh.cpp project/include/shader/shader_program.hpp project/src/shader/shader_program.cpp project/src/utils.cpp project/include/shader/entity_shader.hpp project/include/model/materialized_mesh.hpp project/include/texture/texture.hpp project/include/texture/texture_manager.hpp project/include/model/material.hpp project/src/texture/texture_manager.cpp project/include/entity.hpp project/include/transformable.hpp project/include/renderer/entity_renderer.hpp project/src/renderer/entity_renderer.cpp project/include/renderer/light_renderer.hpp project/include/shader/light_shader.hpp project/include/light.hpp project/include/model/model.hpp project/src/model/model.cpp)
+        include/camera.hpp
+        src/camera.cpp
+        include/display_manager.hpp
+        src/display_manager.cpp
+        include/game_engine.hpp
+        src/stb_image.cpp
+        include/renderer/master_renderer.hpp
+        src/renderer/master_renderer.cpp
+        include/model/mesh.hpp
+        include/model/primitive_mesh.hpp
+        include/utils.hpp
+        src/model/mesh.cpp
+        src/model/primitive_mesh.cpp
+        include/shader/shader_program.hpp
+        src/shader/shader_program.cpp
+        src/utils.cpp
+        include/shader/entity_shader.hpp
+        include/model/materialized_mesh.hpp
+        include/texture/texture.hpp
+        include/texture/texture_manager.hpp
+        include/model/material.hpp
+        src/texture/texture_manager.cpp
+        include/entity.hpp include/transformable.hpp
+        include/renderer/entity_renderer.hpp
+        src/renderer/entity_renderer.cpp
+        include/renderer/light_renderer.hpp
+        include/shader/light_shader.hpp
+        include/light.hpp
+        include/model/model.hpp
+        src/model/model.cpp
+)
 
 target_link_libraries(game-engine OpenGL::GL ${LIBS})
 
-add_executable(sandbox project/src/main.cpp)
+add_executable(sandbox src/main.cpp)
 target_link_libraries(sandbox game-engine)
 
 # copy /res folder

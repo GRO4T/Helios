@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.3)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 
-project(game-engine)
+project(HeliosCore)
 
 if (UNIX)
     if (POLICY CMP0072)
@@ -30,61 +30,62 @@ elseif (WIN32)
     set(LIBS glfw3 glew32s assimp-vc142-mt)
 endif ()
 
-include_directories(include)
+include_directories(Helios/Core/include)
 include_directories(lib/common/include)
 
 add_library(
-        game-engine
-        include/camera.hpp
-        src/camera.cpp
-        include/display_manager.hpp
-        src/display_manager.cpp
-        include/game_engine.hpp
-        src/stb_image.cpp
-        include/renderer/master_renderer.hpp
-        src/renderer/master_renderer.cpp
-        include/model/mesh.hpp
-        include/model/primitive_mesh.hpp
-        include/utils.hpp
-        src/model/mesh.cpp
-        src/model/primitive_mesh.cpp
-        include/shader/shader_program.hpp
-        src/shader/shader_program.cpp
-        src/utils.cpp
-        include/shader/entity_shader.hpp
-        include/model/materialized_mesh.hpp
-        include/texture/texture.hpp
-        include/texture/texture_manager.hpp
-        include/model/material.hpp
-        src/texture/texture_manager.cpp
-        include/entity.hpp include/transformable.hpp
-        include/renderer/entity_renderer.hpp
-        src/renderer/entity_renderer.cpp
-        include/renderer/light_renderer.hpp
-        include/shader/light_shader.hpp
-        include/light.hpp
-        include/model/model.hpp
-        src/model/model.cpp
+        HeliosCore
+        Helios/Core/include/camera.hpp
+        Helios/Core/src/camera.cpp
+        Helios/Core/include/display_manager.hpp
+        Helios/Core/src/display_manager.cpp
+        Helios/Core/include/game_engine.hpp
+        Helios/Core/src/stb_image.cpp
+        Helios/Core/include/renderer/master_renderer.hpp
+        Helios/Core/src/renderer/master_renderer.cpp
+        Helios/Core/include/model/mesh.hpp
+        Helios/Core/include/model/primitive_mesh.hpp
+        Helios/Core/include/utils.hpp
+        Helios/Core/src/model/mesh.cpp
+        Helios/Core/src/model/primitive_mesh.cpp
+        Helios/Core/include/shader/shader_program.hpp
+        Helios/Core/src/shader/shader_program.cpp
+        Helios/Core/src/utils.cpp
+        Helios/Core/include/shader/entity_shader.hpp
+        Helios/Core/include/model/materialized_mesh.hpp
+        Helios/Core/include/texture/texture.hpp
+        Helios/Core/include/texture/texture_manager.hpp
+        Helios/Core/include/model/material.hpp
+        Helios/Core/src/texture/texture_manager.cpp
+        Helios/Core/include/entity.hpp
+        Helios/Core/include/transformable.hpp
+        Helios/Core/include/renderer/entity_renderer.hpp
+        Helios/Core/src/renderer/entity_renderer.cpp
+        Helios/Core/include/renderer/light_renderer.hpp
+        Helios/Core/include/shader/light_shader.hpp
+        Helios/Core/include/light.hpp
+        Helios/Core/include/model/model.hpp
+        Helios/Core/src/model/model.cpp
 )
 
-target_link_libraries(game-engine OpenGL::GL ${LIBS})
+target_link_libraries(HeliosCore OpenGL::GL ${LIBS})
 
-add_executable(sandbox src/main.cpp)
-target_link_libraries(sandbox game-engine)
+add_executable(Sandbox Helios/Core/src/main.cpp)
+target_link_libraries(Sandbox HeliosCore)
 
 # copy /res folder
-add_custom_command(TARGET game-engine POST_BUILD
+add_custom_command(TARGET HeliosCore POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/res
-        $<TARGET_FILE_DIR:game-engine>/res
+        $<TARGET_FILE_DIR:HeliosCore>/res
         )
 
 # copy dlls
 if (WIN32)
-    add_custom_command(TARGET game-engine POST_BUILD
+    add_custom_command(TARGET HeliosCore POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory
             ${CMAKE_SOURCE_DIR}/dll
-            $<TARGET_FILE_DIR:game-engine>
+            $<TARGET_FILE_DIR:HeliosCore>
             )
 endif ()
 

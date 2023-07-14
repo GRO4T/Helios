@@ -57,7 +57,8 @@ private:
     void createScene() {
         // complex model
         {
-            ModelPtr model = std::make_unique<Model>("res/backpack/backpack.obj");
+            ModelPtr model =
+                std::make_unique<Model>("res/backpack/backpack.obj");
             Transform t;
             t.position.y = 5.0f;
             t.position.z = 30.0f;
@@ -82,8 +83,8 @@ private:
             t.position =
                 glm::vec3(rg.random<-1, 1>() * pos_m, rg.random_0_1() * pos_m,
                           rg.random<-1, 1>() * pos_m);
-            entities.push_back(std::move(
-                std::make_unique<Entity>(std::move(model), t)));
+            entities.push_back(
+                std::move(std::make_unique<Entity>(std::move(model), t)));
         }
         // planes
         {
@@ -151,23 +152,24 @@ private:
                 PhongLight{
                     {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}},
                 PointLight::Attenuation{1.0f, 0.09f, 0.032f});
-/*
-        point_light = std::make_unique<PointLight>(
-            std::move(mesh), t,
-            PhongLight{
-                {0.2f, 0.2f, 0.0f}, {0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f}},
-            PhysicalLight::Attenuation{1.0f, 0.09f, 0.032f});
-            */
+            /*
+                    point_light = std::make_unique<PointLight>(
+                        std::move(mesh), t,
+                        PhongLight{
+                            {0.2f, 0.2f, 0.0f}, {0.5f, 0.5f, 0.0f}, {1.0f, 1.0f,
+               0.0f}}, PhysicalLight::Attenuation{1.0f, 0.09f, 0.032f});
+                        */
 
             renderer.registerObject(*point_light);
         }
 
         // dir light
         {
-            dir_light = std::make_unique<DirLight>(
-                PhongLight{
-                    {0.1f, 0.1f, 0.1f}, {0.25f, 0.25f, 0.25f}, {0.5f, 0.5f, 0.5f}},
-                glm::vec3{0, -1, 1});
+            dir_light =
+                std::make_unique<DirLight>(PhongLight{{0.1f, 0.1f, 0.1f},
+                                                      {0.25f, 0.25f, 0.25f},
+                                                      {0.5f, 0.5f, 0.5f}},
+                                           glm::vec3{0, -1, 1});
             renderer.registerObject(*dir_light);
         }
 
@@ -201,10 +203,10 @@ private:
         {
             global_light = std::make_unique<Light>(PhongLight{
                 {0.1f, 0.1f, 0.1f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
-                /*
-            global_light = std::make_unique<Light>(PhongLight{
-                {0.4f, 0.4f, 0.4f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
-                */
+            /*
+        global_light = std::make_unique<Light>(PhongLight{
+            {0.4f, 0.4f, 0.4f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
+            */
             renderer.setGlobalLight(*global_light);
         }
 

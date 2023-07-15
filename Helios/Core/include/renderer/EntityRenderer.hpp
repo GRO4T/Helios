@@ -5,7 +5,7 @@
 #include "Entity.hpp"
 #include "shader/EntityShader.hpp"
 
-namespace game_engine {
+namespace helios {
 
 class EntityRenderer {
 public:

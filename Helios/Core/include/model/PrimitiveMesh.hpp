@@ -5,7 +5,7 @@
 #include "model/Mesh.hpp"
 #include "opengl_all.hpp"
 
-namespace game_engine {
+namespace helios {
 
 namespace primitive_mesh {
 

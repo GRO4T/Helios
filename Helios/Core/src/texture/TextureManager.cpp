@@ -1,6 +1,6 @@
 #include "texture/TextureManager.hpp"
 
-namespace game_engine {
+namespace helios {
 
 std::map<TextureManager::Filepath, TextureSPtr> TextureManager::texture_map;
 

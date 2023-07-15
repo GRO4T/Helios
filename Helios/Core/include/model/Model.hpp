@@ -10,7 +10,7 @@
 #include "Utils.hpp"
 #include "model/MaterializedMesh.hpp"
 
-namespace game_engine {
+namespace helios {
 
 class Model {
 public:

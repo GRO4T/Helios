@@ -4,7 +4,7 @@
 
 #include "opengl_all.hpp"
 
-namespace game_engine {
+namespace helios {
 
 GLFWwindow* DisplayManager::window;
 int DisplayManager::width, DisplayManager::height;

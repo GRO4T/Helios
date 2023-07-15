@@ -1,6 +1,6 @@
 #include "model/PrimitiveMesh.hpp"
 
-namespace game_engine {
+namespace helios {
 namespace primitive_mesh {
 
 static const double PI = 3.14159265;

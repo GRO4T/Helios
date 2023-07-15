@@ -6,7 +6,7 @@
 #include "opengl_all.hpp"
 #include "stb_image.h"
 
-namespace game_engine {
+namespace helios {
 
 namespace utils {
 

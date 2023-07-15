@@ -2,7 +2,7 @@
 
 #include "model/PrimitiveMesh.hpp"
 
-namespace game_engine {
+namespace helios {
 
 Mesh::~Mesh() { glDeleteVertexArrays(1, &VAO); }
 

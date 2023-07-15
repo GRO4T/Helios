@@ -4,7 +4,7 @@
 
 #include "Texture.hpp"
 
-namespace game_engine {
+namespace helios {
 
 class TextureManager {
     using Filepath = std::string;

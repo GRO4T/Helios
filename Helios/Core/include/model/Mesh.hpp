@@ -6,7 +6,7 @@
 
 #include "opengl_all.hpp"
 
-namespace game_engine {
+namespace helios {
 
 using utils::Vertex;
 

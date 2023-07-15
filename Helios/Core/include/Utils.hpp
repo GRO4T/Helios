@@ -13,7 +13,7 @@
 
 // class Entity;
 
-namespace game_engine {
+namespace helios {
 
 namespace utils {
 

@@ -3,7 +3,7 @@
 #include "Utils.hpp"
 #include "model/Mesh.hpp"
 
-namespace game_engine {
+namespace helios {
 
 struct PhongLight {
     PhongLight(const glm::vec3 &ambient, const glm::vec3 &diffuse,

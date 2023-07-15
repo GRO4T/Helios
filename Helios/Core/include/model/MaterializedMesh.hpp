@@ -8,7 +8,7 @@
 #include "texture/Texture.hpp"
 #include "texture/TextureManager.hpp"
 
-namespace game_engine {
+namespace helios {
 
 class MaterializedMesh {
 public:

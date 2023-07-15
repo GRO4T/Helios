@@ -1,6 +1,6 @@
 #include "model/Model.hpp"
 
-namespace game_engine {
+namespace helios {
 
 Model::Model(const std::string& path) {
     utils::Benchmark b;

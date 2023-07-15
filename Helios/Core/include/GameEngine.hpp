@@ -5,7 +5,7 @@
 #include "DisplayManager.hpp"
 #include "Utils.hpp"
 
-namespace game_engine {
+namespace helios {
 
 class GameEngine {
 public:

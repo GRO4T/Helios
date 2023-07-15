@@ -3,7 +3,7 @@
 #include "ShaderProgram.hpp"
 #include "Utils.hpp"
 
-namespace game_engine {
+namespace helios {
 
 using namespace utils;
 

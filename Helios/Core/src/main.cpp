@@ -1,6 +1,6 @@
 #include "GameEngine.hpp"
 
-using namespace game_engine;
+using namespace helios;
 
 int main() {
     if (!GameEngine::init()) return 1;

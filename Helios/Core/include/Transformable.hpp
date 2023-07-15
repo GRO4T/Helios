@@ -7,7 +7,7 @@
 #include "model/MaterializedMesh.hpp"
 #include "model/Model.hpp"
 
-namespace game_engine {
+namespace helios {
 
 using utils::Transform;
 

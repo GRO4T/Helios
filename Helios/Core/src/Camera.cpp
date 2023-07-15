@@ -4,7 +4,7 @@
 
 #include "DisplayManager.hpp"
 
-namespace game_engine {
+namespace helios {
 
 void Camera::move() {
     DisplayManager& dm = DisplayManager::getInstance();

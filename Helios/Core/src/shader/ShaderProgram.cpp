@@ -7,7 +7,7 @@
 #include "Utils.hpp"
 #include "opengl_all.hpp"
 
-namespace game_engine {
+namespace helios {
 
 std::string read_shader_code(const GLchar *shader_path) {
     std::ifstream shader_file;

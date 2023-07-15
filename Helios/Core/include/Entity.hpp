@@ -27,4 +27,4 @@ private:
 using EntityPtr = std::unique_ptr<Entity>;
 using EntitySPtr = std::shared_ptr<Entity>;
 
-}  // namespace game_engine
+}  // namespace helios

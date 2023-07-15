@@ -33,4 +33,4 @@ private:
     double speed = 0.02f;
 };
 
-}  // namespace game_engine
+}  // namespace helios

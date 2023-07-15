@@ -69,4 +69,4 @@ private:
     static double scroll_x, scroll_y;
 };
 
-}  // namespace game_engine
+}  // namespace helios

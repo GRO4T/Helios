@@ -30,4 +30,4 @@ private:
     ShaderProgram outline_shader;
 };
 
-}  // namespace game_engine
+}  // namespace helios

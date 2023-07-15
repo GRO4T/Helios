@@ -105,4 +105,4 @@ float RandomNumberGenerator::random_0_1() { return dis_0_1(generator_); }
 
 }  // namespace utils
 
-}  // namespace game_engine
+}  // namespace helios

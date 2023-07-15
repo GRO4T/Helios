@@ -31,4 +31,4 @@ void MasterRenderer::render(const Camera& camera, double time) {
     light_renderer.render(physical_lights, camera);
 }
 
-}  // namespace game_engine
+}  // namespace helios

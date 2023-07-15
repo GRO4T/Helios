@@ -72,4 +72,4 @@ private:
 using TexturePtr = std::unique_ptr<Texture>;
 using TextureSPtr = std::shared_ptr<Texture>;
 
-}  // namespace game_engine
+}  // namespace helios

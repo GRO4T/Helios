@@ -40,4 +40,4 @@ void Camera::rotate() {
     pitch -= dm.getMouseDY() * real_speed;
 }
 
-}  // namespace game_engine
+}  // namespace helios

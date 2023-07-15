@@ -73,4 +73,4 @@ void Mesh::storeDataInAttribList(GLuint attrib_number, GLuint vector_len,
     glEnableVertexAttribArray(attrib_number);
 }
 
-}  // namespace game_engine
+}  // namespace helios

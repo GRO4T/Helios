@@ -38,4 +38,4 @@ protected:
     Transform transform;
 };
 
-}  // namespace game_engine
+}  // namespace helios

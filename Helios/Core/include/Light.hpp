@@ -99,4 +99,4 @@ private:
 
 using DirLightPtr = std::unique_ptr<DirLight>;
 
-}  // namespace game_engine
+}  // namespace helios

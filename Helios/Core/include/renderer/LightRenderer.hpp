@@ -41,4 +41,4 @@ private:
     LightShader shader;
 };
 
-}  // namespace game_engine
+}  // namespace helios

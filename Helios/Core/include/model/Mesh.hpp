@@ -56,4 +56,4 @@ using MeshPtr = std::unique_ptr<Mesh>;
 using IndexedMeshPtr = std::unique_ptr<IndexedMesh>;
 using StripedMeshPtr = std::unique_ptr<StripedMesh>;
 
-}  // namespace game_engine
+}  // namespace helios

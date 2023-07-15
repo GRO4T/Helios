@@ -21,4 +21,4 @@ private:
     static std::map<Filepath, TextureSPtr> texture_map;
 };
 
-}  // namespace game_engine
+}  // namespace helios

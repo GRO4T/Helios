@@ -43,4 +43,4 @@ struct Silver : public Material {
 
 }  // namespace material
 
-}  // namespace game_engine
+}  // namespace helios

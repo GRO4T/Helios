@@ -121,4 +121,4 @@ public:
     }
 };
 
-}  // namespace game_engine
+}  // namespace helios

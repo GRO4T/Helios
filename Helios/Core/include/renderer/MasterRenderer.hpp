@@ -49,4 +49,4 @@ private:
     Light* global_light = nullptr;
 };
 
-}  // namespace game_engine
+}  // namespace helios

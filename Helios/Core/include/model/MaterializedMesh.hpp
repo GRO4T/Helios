@@ -26,4 +26,4 @@ private:
 using MaterializedMeshPtr = std::unique_ptr<MaterializedMesh>;
 using MaterializedMeshSPtr = std::shared_ptr<MaterializedMesh>;
 
-}  // namespace game_engine
+}  // namespace helios

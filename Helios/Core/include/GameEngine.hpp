@@ -250,4 +250,4 @@ private:
     LightPtr global_light;
 };
 
-}  // namespace game_engine
+}  // namespace helios

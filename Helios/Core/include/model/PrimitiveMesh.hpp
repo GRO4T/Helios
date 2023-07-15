@@ -18,4 +18,4 @@ std::vector<Vertex> plane(float width, float height, unsigned int w_segments,
                           unsigned int h_segments);
 
 }  // namespace primitive
-}  // namespace game_engine
+}  // namespace helios

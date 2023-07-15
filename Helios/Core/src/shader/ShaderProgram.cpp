@@ -116,4 +116,4 @@ void ShaderProgram::setTransformationMatrix(
     setMat4("transform", transformation_matrix);
 }
 
-}  // namespace game_engine
+}  // namespace helios

@@ -148,4 +148,4 @@ void DisplayManager::decreaseMouseSensitivity(double delta) {
         std::clamp(mouse_sensitivity_y - delta, 0.0, MAX_MOUSE_SENSITIVITY);
 }
 
-}  // namespace game_engine
+}  // namespace helios

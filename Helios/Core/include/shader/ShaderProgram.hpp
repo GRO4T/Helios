@@ -36,4 +36,4 @@ private:
     GLuint program_id;
 };
 
-}  // namespace game_engine
+}  // namespace helios

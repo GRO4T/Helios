@@ -20,4 +20,4 @@ TextureSPtr TextureManager::getTexture(const std::string& filepath) {
     }
 }
 
-}  // namespace game_engine
+}  // namespace helios

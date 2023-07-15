@@ -31,4 +31,4 @@ private:
 
 using ModelPtr = std::unique_ptr<Model>;
 
-}  // namespace game_engine
+}  // namespace helios

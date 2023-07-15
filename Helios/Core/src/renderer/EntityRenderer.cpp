@@ -100,4 +100,4 @@ void EntityRenderer::drawOutline(const std::vector<Entity*>& entities,
     }
 }
 
-}  // namespace game_engine
+}  // namespace helios

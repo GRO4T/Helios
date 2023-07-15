@@ -39,10 +39,10 @@ void Model::processNode(aiNode* node, const aiScene* scene) {
     }
 }
 
-MaterializedMeshSPtr Model::processMesh(aiMesh* mesh, const aiScene* scene) {
+MaterializedMeshSharedPtr Model::processMesh(aiMesh* mesh, const aiScene* scene) {
     std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
-    MaterialSPtr material = std::make_shared<Material>();
+    MaterialSharedPtr material = std::make_shared<Material>();
 
     for (uint32_t i = 0; i < mesh->mNumVertices; ++i) {
         Vertex vertex;

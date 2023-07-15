@@ -7,247 +7,221 @@
 
 namespace helios {
 
+/**
+ * Main class of the game engine. Handles rendering and keeps track of the camera,
+ * entities and light sources.
+ */
 class GameEngine {
-public:
-    GameEngine()
-        : display_manager(DisplayManager::getInstance()),
-          texture_manager(TextureManager::getInstance()),
-          renderer(),
-          camera(glm::vec3(0, 4, -10), 20, 180) {}
+ public:
+  GameEngine()
+      : display_manager_(DisplayManager::getInstance()),
+        texture_manager_(TextureManager::getInstance()),
+        renderer(),
+        camera_(glm::vec3(0, 4, -10), 20, 180) {}
 
-    static bool init() {
-        bool success = true;
-        try {
-            DisplayManager::init();
-        } catch (std::exception e) {
-            std::cout << e.what() << std::endl;
-            success = false;
-        }
-        DisplayManager::getInstance().createDisplay(DISPLAY_WIDTH,
-                                                    DISPLAY_HEIGHT);
-        MasterRenderer::calculateProjectionMatrix(
-            FOV, Z_NEAR, Z_FAR, DISPLAY_WIDTH, DISPLAY_HEIGHT);
-        return success;
-    }
-    void run() {
-        std::srand(uint32_t(std::time(0)));
-        createScene();
-        while (!display_manager.windowShouldClose()) {
-            double delta_time = display_manager.getDeltaTime();
-            display_manager.handleEvents();
-            updateCamera();
-            moveLight();
-            renderer.render(camera, delta_time);
-            display_manager.update();
-        }
-    }
+  /**
+   * Initializes game window.
+   *
+   * @return true on success, false on failure
+   */
+  static bool init();
 
-private:
-    static const uint32_t DISPLAY_WIDTH = 1440;
-    static const uint32_t DISPLAY_HEIGHT = 900;
-    static constexpr float FOV = 45.0f;
-    static constexpr float Z_NEAR = 0.1f;
-    static constexpr float Z_FAR = 400.0f;
+  /**
+   * Runs game loop.
+   */
+  void run();
 
-    void updateCamera() {
-        camera.move();
-        camera.rotate();
-    }
+  /**
+   * Registers an entity with 3D model stored in *.obj file.
+   *
+   * @param transform               Entity's position in the scene.
+   * @param model_file_path         Path to the *.obj containing entity's 3D model.
+   */
+  void registerEntity(const Transform& transform,
+                      const std::string& model_file_path);
 
-    void createScene() {
-        // complex model
-        {
-            ModelPtr model =
-                std::make_unique<Model>("res/backpack/backpack.obj");
-            Transform t;
-            t.position.y = 5.0f;
-            t.position.z = 30.0f;
-            entities.push_back(
-                std::move(std::make_unique<Entity>(std::move(model), t)));
-        }
+  /**
+   * Registers an entity with primitive mesh, diffuse and specular map.
+   *
+   * @tparam MaterialType           Material type (silver, gold, etc.).
+   * @param transform               Entity's position in the scene.
+   * @param mesh                    Entity's mesh.
+   * @param diffuse_map_file_path   Path to file with diffuse map.
+   * @param specular_map_file_path  Path to file with specular map.
+   */
+  template <typename MaterialType>
+  void registerEntity(const Transform& transform, MeshPtr mesh,
+                      const std::string& diffuse_map_file_path,
+                      const std::string& specular_map_file_path) {
+    MaterialSharedPtr material = std::make_shared<MaterialType>();
+    material->diffuse_maps = {
+        texture_manager_.getTexture(diffuse_map_file_path)};
+    material->specular_maps.push_back(
+        texture_manager_.getTexture(specular_map_file_path));
+    std::vector<MaterializedMeshSharedPtr> meshes = {
+        std::make_unique<MaterializedMesh>(std::move(mesh), material)};
+    ModelPtr model = std::make_unique<Model>(meshes);
+    EntityPtr entity = std::make_unique<Entity>(std::move(model), transform);
+    entities.push_back(std::move(entity));
+  }
 
-        // cubes
-        auto& rg = utils::RandomNumberGenerator::getInstance();
-        for (int i = 0; i < 40; ++i) {
-            MeshPtr mesh = std::make_unique<Mesh>(primitive_mesh::cube(1.0f));
-            MaterialSPtr material = std::make_shared<material::Silver>();
-            material->diffuse_maps = {
-                texture_manager.getTexture("res/wood_metal_container.jpg")};
-            material->specular_maps.push_back(texture_manager.getTexture(
-                "res/wood_metal_container_specular.jpg"));
-            std::vector<MaterializedMeshSPtr> meshes = {
-                std::make_unique<MaterializedMesh>(std::move(mesh), material)};
-            ModelPtr model = std::make_unique<Model>(meshes);
-            Transform t;
-            const float pos_m = 20.0f;
-            t.position =
-                glm::vec3(rg.random<-1, 1>() * pos_m, rg.random_0_1() * pos_m,
-                          rg.random<-1, 1>() * pos_m);
-            entities.push_back(
-                std::move(std::make_unique<Entity>(std::move(model), t)));
-        }
-        // planes
-        {
-            auto create_plane = [&](const Transform& t) {
-                MeshPtr mesh =
-                    std::make_unique<Mesh>(primitive_mesh::plane(20, 20, 4, 4));
-                MaterialSPtr material = std::make_shared<material::Silver>();
-                std::vector<MaterializedMeshSPtr> meshes = {
-                    std::make_unique<MaterializedMesh>(std::move(mesh),
-                                                       material)};
-                ModelPtr model = std::make_unique<Model>(meshes);
-                entities.push_back(
-                    std::move(std::make_unique<Entity>(std::move(model), t)));
-            };
-            Transform t;
-            t.rotation.x = -90.0f;
-            create_plane(t);
-            t.position.y = 20.0f;
-            create_plane(t);
-            t.rotation.x = 0.0f;
-            t.position = glm::vec3(0, 10, -20);
-            create_plane(t);
-            t.position.z = 20.0f;
-            t.rotation.y = 180.0f;
-            create_plane(t);
-            t.rotation.y = 270.0f;
-            t.position = glm::vec3(20, 0, 0);
-            create_plane(t);
-            t.position.x = -20;
-            t.rotation.y = 90.0f;
-            create_plane(t);
-        }
-        // point_lights
-        for (int i = 0; i < 3; ++i) {
-            MeshPtr mesh =
-                std::make_unique<Mesh>(primitive_mesh::sphere(1.0f, 25));
-            Transform t;
-            const float pos_m = 20.0f;
-            t.position =
-                glm::vec3(rg.random<-1, 1>() * pos_m, rg.random_0_1() * pos_m,
-                          rg.random<-1, 1>() * pos_m);
-            point_lights.push_back(std::move(std::make_unique<PointLight>(
-                std::move(mesh), t,
-                PhongLight{
-                    {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
-                PointLight::Attenuation{1.0f, 0.045f, 0.0075f})));
-        }
+  /**
+   * Registers an entity with primitive mesh without diffuse and specular maps.
+   *
+   * @tparam MaterialType           Material type (silver, gold, etc.).
+   * @param transform               Entity's position in the scene.
+   * @param mesh                    Entity's mesh.
+   */
+  template <typename MaterialType>
+  void registerEntity(const Transform& transform, MeshPtr mesh) {
+    MaterialSharedPtr material = std::make_shared<MaterialType>();
+    std::vector<MaterializedMeshSharedPtr> meshes = {
+        std::make_unique<MaterializedMesh>(std::move(mesh), material)};
+    ModelPtr model = std::make_unique<Model>(meshes);
+    EntityPtr entity = std::make_unique<Entity>(std::move(model), transform);
+    entities.push_back(std::move(entity));
+  }
 
-        // moveable point light
-        {
-            MeshPtr mesh =
-                std::make_unique<Mesh>(primitive_mesh::sphere(1.0f, 25));
-            Transform t;
-            t.position.y = 4.0f;
-            /*
-            point_light = std::make_unique<PointLight>(
-                std::move(mesh), t,
-                PhongLight{
-                    {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
-                PointLight::Attenuation{1.0f, 0.09f, 0.032f});
-                */
+  /**
+   * Registers a point light.
+   *
+   * @param transform               Light's position in the scene.
+   * @param mesh                    Light's mesh. TODO: Make more descriptive.
+   */
+  void registerPointLight(const Transform& transform, MeshPtr mesh);
 
-            point_light = std::make_unique<PointLight>(
-                std::move(mesh), t,
-                PhongLight{
-                    {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}},
-                PointLight::Attenuation{1.0f, 0.09f, 0.032f});
-            /*
-                    point_light = std::make_unique<PointLight>(
-                        std::move(mesh), t,
-                        PhongLight{
-                            {0.2f, 0.2f, 0.0f}, {0.5f, 0.5f, 0.0f}, {1.0f, 1.0f,
-               0.0f}}, PhysicalLight::Attenuation{1.0f, 0.09f, 0.032f});
-                        */
+ private:
+  static const uint32_t DISPLAY_WIDTH = 1440; //< Application window width in pixels.
+  static const uint32_t DISPLAY_HEIGHT = 900; //< Application window height in pixels.
+  static constexpr float FOV = 45.0f;         //< Camera's field of view.
+  static constexpr float Z_NEAR = 0.1f;       //< TODO
+  static constexpr float Z_FAR = 400.0f;      //< TODO
 
-            renderer.registerObject(*point_light);
-        }
+  /**
+   * Updates camera position and rotation.
+   */
+  void updateCamera();
 
-        // dir light
-        {
-            dir_light =
-                std::make_unique<DirLight>(PhongLight{{0.1f, 0.1f, 0.1f},
-                                                      {0.25f, 0.25f, 0.25f},
-                                                      {0.5f, 0.5f, 0.5f}},
-                                           glm::vec3{0, -1, 1});
-            renderer.registerObject(*dir_light);
-        }
+  /**
+   * TODO: Remove this.
+   */
+  void createScene() {
+    auto& rg = utils::RandomNumberGenerator::getInstance();
+    // moveable point light
+    {
+      MeshPtr mesh = std::make_unique<Mesh>(primitive_mesh::sphere(1.0f, 25));
+      Transform t;
+      t.position.y = 4.0f;
+      /*
+      point_light = std::make_unique<PointLight>(
+          std::move(mesh), t,
+          PhongLight{
+              {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
+          PointLight::Attenuation{1.0f, 0.09f, 0.032f});
+          */
 
-        // spot lights
-        {
-            auto createSpotLight = [&](const Transform& t,
-                                       const glm::vec3& direction) {
-                MeshPtr model =
-                    std::make_unique<Mesh>(primitive_mesh::sphere(1.0f, 25));
-                spot_lights.push_back(std::move(std::make_unique<SpotLight>(
-                    std::move(model), t,
-                    PhongLight{{0.2f, 0.2f, 0.2f},
-                               {0.5f, 0.5f, 0.5f},
-                               {1.0f, 1.0f, 1.0f}},
-                    direction, 12.5f, 30.0f,
-                    PhysicalLight::Attenuation{1.0f, 0.022f, 0.0019f})));
-            };
-            for (int i = 0; i < 3; ++i) {
-                Transform t;
-                const float pos_m = 15.0f;
-                t.position = glm::vec3(rg.random<-1, 1>() * pos_m,
-                                       rg.random_0_1() * pos_m,
-                                       rg.random<-1, 1>() * pos_m);
-                auto direction = glm::vec3(
-                    rg.random<-1, 1>(), rg.random<-1, 1>(), rg.random<-1, 1>());
-                createSpotLight(t, direction);
-            }
-        }
+      point_light = std::make_unique<PointLight>(
+          std::move(mesh), t,
+          PhongLight{
+              {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}},
+          PointLight::Attenuation{1.0f, 0.09f, 0.032f});
+      /*
+              point_light = std::make_unique<PointLight>(
+                  std::move(mesh), t,
+                  PhongLight{
+                      {0.2f, 0.2f, 0.0f}, {0.5f, 0.5f, 0.0f}, {1.0f, 1.0f,
+         0.0f}}, PhysicalLight::Attenuation{1.0f, 0.09f, 0.032f});
+                  */
 
-        // global light
-        {
-            global_light = std::make_unique<Light>(PhongLight{
-                {0.1f, 0.1f, 0.1f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
-            /*
-        global_light = std::make_unique<Light>(PhongLight{
-            {0.4f, 0.4f, 0.4f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
-            */
-            renderer.setGlobalLight(*global_light);
-        }
-
-        for (auto& e : entities) {
-            renderer.registerObject(*e);
-        }
-        for (auto& point_light : point_lights) {
-            renderer.registerObject(*point_light);
-        }
-        for (auto& s : spot_lights) {
-            renderer.registerObject(*s);
-        }
-    };
-
-    void moveLight() {
-        if (display_manager.isKeyPressed(GLFW_KEY_UP)) {
-            point_light->move(glm::vec3(1, 0, 0));
-        }
-        if (display_manager.isKeyPressed(GLFW_KEY_DOWN)) {
-            point_light->move(glm::vec3(-1, 0, 0));
-        }
-        if (display_manager.isKeyPressed(GLFW_KEY_RIGHT)) {
-            point_light->move(glm::vec3(0, 0, 1));
-        }
-        if (display_manager.isKeyPressed(GLFW_KEY_LEFT)) {
-            point_light->move(glm::vec3(0, 0, -1));
-        }
+      renderer.registerObject(*point_light);
     }
 
-    DisplayManager& display_manager;
-    TextureManager& texture_manager;
+    // dir light
+    {
+      dir_light = std::make_unique<DirLight>(
+          PhongLight{
+              {0.1f, 0.1f, 0.1f}, {0.25f, 0.25f, 0.25f}, {0.5f, 0.5f, 0.5f}},
+          glm::vec3{0, -1, 1});
+      renderer.registerObject(*dir_light);
+    }
 
-    Camera camera;
-    MasterRenderer renderer;
+    // spot lights
+    {
+      auto createSpotLight = [&](const Transform& t,
+                                 const glm::vec3& direction) {
+        MeshPtr model =
+            std::make_unique<Mesh>(primitive_mesh::sphere(1.0f, 25));
+        spot_lights.push_back(std::move(std::make_unique<SpotLight>(
+            std::move(model), t,
+            PhongLight{
+                {0.2f, 0.2f, 0.2f}, {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
+            direction, 12.5f, 30.0f,
+            PhysicalLight::Attenuation{1.0f, 0.022f, 0.0019f})));
+      };
+      for (int i = 0; i < 3; ++i) {
+        Transform t;
+        const float pos_m = 15.0f;
+        t.position =
+            glm::vec3(rg.random<-1, 1>() * pos_m, rg.random_0_1() * pos_m,
+                      rg.random<-1, 1>() * pos_m);
+        auto direction = glm::vec3(rg.random<-1, 1>(), rg.random<-1, 1>(),
+                                   rg.random<-1, 1>());
+        createSpotLight(t, direction);
+      }
+    }
 
-    std::vector<EntityPtr> entities;
-    PointLightPtr point_light;
-    std::vector<PointLightPtr> point_lights;
-    DirLightPtr dir_light;
-    std::vector<SpotLightPtr> spot_lights;
-    LightPtr global_light;
+    // global light
+    {
+      global_light = std::make_unique<Light>(PhongLight{
+          {0.1f, 0.1f, 0.1f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
+      /*
+  global_light = std::make_unique<Light>(PhongLight{
+      {0.4f, 0.4f, 0.4f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}});
+      */
+      renderer.setGlobalLight(*global_light);
+    }
+
+    for (auto& e : entities) {
+      renderer.registerObject(*e);
+    }
+    for (auto& point_light : point_lights) {
+      renderer.registerObject(*point_light);
+    }
+    for (auto& s : spot_lights) {
+      renderer.registerObject(*s);
+    }
+  };
+
+  /**
+   * TODO: Refactor this.
+   */
+  void moveLight() {
+    if (display_manager_.isKeyPressed(GLFW_KEY_UP)) {
+      point_light->move(glm::vec3(1, 0, 0));
+    }
+    if (display_manager_.isKeyPressed(GLFW_KEY_DOWN)) {
+      point_light->move(glm::vec3(-1, 0, 0));
+    }
+    if (display_manager_.isKeyPressed(GLFW_KEY_RIGHT)) {
+      point_light->move(glm::vec3(0, 0, 1));
+    }
+    if (display_manager_.isKeyPressed(GLFW_KEY_LEFT)) {
+      point_light->move(glm::vec3(0, 0, -1));
+    }
+  }
+
+  DisplayManager& display_manager_;
+  TextureManager& texture_manager_;
+
+  Camera camera_;
+  MasterRenderer renderer;
+
+  std::vector<EntityPtr> entities;
+  PointLightPtr point_light;
+  std::vector<PointLightPtr> point_lights;
+  DirLightPtr dir_light;
+  std::vector<SpotLightPtr> spot_lights;
+  LightPtr global_light;
 };
 
 }  // namespace helios

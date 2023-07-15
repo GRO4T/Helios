@@ -14,15 +14,15 @@ namespace helios {
 
 class Model {
 public:
-    Model(const std::vector<MaterializedMeshSPtr>& meshes) : meshes(meshes) {}
+    Model(const std::vector<MaterializedMeshSharedPtr>& meshes) : meshes(meshes) {}
     Model(const std::string& path);
     void load(const std::string& path);
 
-    std::vector<MaterializedMeshSPtr> meshes;
+    std::vector<MaterializedMeshSharedPtr> meshes;
 
 private:
     void processNode(aiNode* node, const aiScene* scene);
-    MaterializedMeshSPtr processMesh(aiMesh* mesh, const aiScene* scene);
+    MaterializedMeshSharedPtr processMesh(aiMesh* mesh, const aiScene* scene);
     std::vector<TextureSPtr> loadMaterialTextures(aiMaterial* mat,
                                                   aiTextureType type);
 

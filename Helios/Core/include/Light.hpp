@@ -52,7 +52,7 @@ public:
     float getQuadratic() const { return attenuation.quadratic; }
 
 protected:
-    MeshPtr mesh;
+ MeshPtr mesh;
     Attenuation attenuation;
 };
 

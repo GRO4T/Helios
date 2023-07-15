@@ -19,7 +19,7 @@ public:
     float shininess;
 };
 
-using MaterialSPtr = std::shared_ptr<Material>;
+using MaterialSharedPtr = std::shared_ptr<Material>;
 
 namespace material {
 

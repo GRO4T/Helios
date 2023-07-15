@@ -12,18 +12,18 @@ namespace helios {
 
 class MaterializedMesh {
 public:
-    MaterializedMesh(MeshPtr mesh, MaterialSPtr material)
+    MaterializedMesh(MeshPtr mesh, MaterialSharedPtr material)
         : mesh(std::move(mesh)), material(material) {}
     ~MaterializedMesh() {}
     const Mesh& getMesh() const { return *mesh; }
     Material& getMaterial() const { return *material; }
 
 private:
-    MeshPtr mesh;
-    MaterialSPtr material;
+ MeshPtr mesh;
+ MaterialSharedPtr material;
 };
 
 using MaterializedMeshPtr = std::unique_ptr<MaterializedMesh>;
-using MaterializedMeshSPtr = std::shared_ptr<MaterializedMesh>;
+using MaterializedMeshSharedPtr = std::shared_ptr<MaterializedMesh>;
 
 }  // namespace helios

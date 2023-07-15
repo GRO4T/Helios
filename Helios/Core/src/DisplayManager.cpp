@@ -1,4 +1,4 @@
-#include "display_manager.hpp"
+#include "DisplayManager.hpp"
 
 #include <iostream>
 

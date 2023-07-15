@@ -1,11 +1,11 @@
-#include "shader/shader_program.hpp"
+#include "shader/ShaderProgram.hpp"
 
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
+#include "Utils.hpp"
 #include "opengl_all.hpp"
-#include "utils.hpp"
 
 namespace game_engine {
 

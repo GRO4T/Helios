@@ -1,13 +1,13 @@
 #pragma once
 
-#include <entity.hpp>
-#include <model/mesh.hpp>
-#include <model/primitive_mesh.hpp>
-#include <shader/entity_shader.hpp>
+#include <Entity.hpp>
+#include <model/Mesh.hpp>
+#include <model/PrimitiveMesh.hpp>
+#include <shader/EntityShader.hpp>
 
-#include "camera.hpp"
-#include "entity_renderer.hpp"
-#include "light_renderer.hpp"
+#include "Camera.hpp"
+#include "EntityRenderer.hpp"
+#include "LightRenderer.hpp"
 #include "opengl_all.hpp"
 
 namespace game_engine {

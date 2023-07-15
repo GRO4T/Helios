@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "entity.hpp"
-#include "shader/entity_shader.hpp"
+#include "Entity.hpp"
+#include "shader/EntityShader.hpp"
 
 namespace game_engine {
 

@@ -1,4 +1,4 @@
-#include "model/primitive_mesh.hpp"
+#include "model/PrimitiveMesh.hpp"
 
 namespace game_engine {
 namespace primitive_mesh {

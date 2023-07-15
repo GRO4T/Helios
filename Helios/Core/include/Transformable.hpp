@@ -2,10 +2,10 @@
 
 #include <memory>
 
-#include "entity.hpp"
-#include "model/materialized_mesh.hpp"
-#include "model/model.hpp"
-#include "utils.hpp"
+#include "Entity.hpp"
+#include "Utils.hpp"
+#include "model/MaterializedMesh.hpp"
+#include "model/Model.hpp"
 
 namespace game_engine {
 

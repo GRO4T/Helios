@@ -7,7 +7,7 @@
 #include <random>
 #include <vector>
 
-#include "camera.hpp"
+#include "Camera.hpp"
 #include "opengl_all.hpp"
 #include "stb_image.h"
 

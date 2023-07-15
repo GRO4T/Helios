@@ -1,7 +1,7 @@
 #pragma once
 
-#include "shader_program.hpp"
-#include "utils.hpp"
+#include "ShaderProgram.hpp"
+#include "Utils.hpp"
 
 namespace game_engine {
 

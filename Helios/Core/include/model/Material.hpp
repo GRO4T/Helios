@@ -1,8 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include <texture/texture.hpp>
-#include <texture/texture_manager.hpp>
+#include <texture/Texture.hpp>
+#include <texture/TextureManager.hpp>
 #include <vector>
 
 #include "opengl_all.hpp"

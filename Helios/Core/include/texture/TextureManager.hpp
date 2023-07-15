@@ -2,7 +2,7 @@
 
 #include <map>
 
-#include "texture.hpp"
+#include "Texture.hpp"
 
 namespace game_engine {
 

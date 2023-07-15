@@ -1,7 +1,7 @@
 #pragma once
 
+#include <Utils.hpp>
 #include <memory>
-#include <utils.hpp>
 #include <vector>
 
 #include "opengl_all.hpp"

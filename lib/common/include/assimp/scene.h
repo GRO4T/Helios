@@ -48,14 +48,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef AI_SCENE_H_INC
 #define AI_SCENE_H_INC
 
-#include "types.h"
-#include "texture.h"
-#include "mesh.h"
-#include "light.h"
-#include "camera.h"
-#include "material.h"
+#include "Camera.h"
 #include "anim.h"
+#include "light.h"
+#include "material.h"
+#include "mesh.h"
 #include "metadata.h"
+#include "texture.h"
+#include "types.h"
 
 #ifdef __cplusplus
 #  include <cstdlib>

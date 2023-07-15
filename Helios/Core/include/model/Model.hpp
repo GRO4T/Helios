@@ -7,8 +7,8 @@
 #include <iostream>
 #include <sstream>
 
-#include "model/materialized_mesh.hpp"
-#include "utils.hpp"
+#include "Utils.hpp"
+#include "model/MaterializedMesh.hpp"
 
 namespace game_engine {
 

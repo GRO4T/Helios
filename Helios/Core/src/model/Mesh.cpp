@@ -1,6 +1,6 @@
-#include "model/mesh.hpp"
+#include "model/Mesh.hpp"
 
-#include "model/primitive_mesh.hpp"
+#include "model/PrimitiveMesh.hpp"
 
 namespace game_engine {
 

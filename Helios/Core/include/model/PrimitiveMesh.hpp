@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "model/mesh.hpp"
+#include "model/Mesh.hpp"
 #include "opengl_all.hpp"
 
 namespace game_engine {

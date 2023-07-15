@@ -1,7 +1,7 @@
 #pragma once
 
-#include <light.hpp>
-#include <shader/light_shader.hpp>
+#include <Light.hpp>
+#include <shader/LightShader.hpp>
 
 #include "opengl_all.hpp"
 

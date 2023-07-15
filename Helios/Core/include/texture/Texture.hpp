@@ -4,8 +4,8 @@
 #include <memory>
 #include <string>
 
+#include "Utils.hpp"
 #include "opengl_all.hpp"
-#include "utils.hpp"
 
 namespace game_engine {
 

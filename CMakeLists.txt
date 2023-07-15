@@ -35,37 +35,37 @@ include_directories(lib/common/include)
 
 add_library(
         HeliosCore
-        Helios/Core/include/camera.hpp
-        Helios/Core/src/camera.cpp
-        Helios/Core/include/display_manager.hpp
-        Helios/Core/src/display_manager.cpp
-        Helios/Core/include/game_engine.hpp
+        Helios/Core/include/Camera.hpp
+        Helios/Core/src/Camera.cpp
+        Helios/Core/include/DisplayManager.hpp
+        Helios/Core/src/DisplayManager.cpp
+        Helios/Core/include/GameEngine.hpp
         Helios/Core/src/stb_image.cpp
-        Helios/Core/include/renderer/master_renderer.hpp
-        Helios/Core/src/renderer/master_renderer.cpp
-        Helios/Core/include/model/mesh.hpp
-        Helios/Core/include/model/primitive_mesh.hpp
-        Helios/Core/include/utils.hpp
-        Helios/Core/src/model/mesh.cpp
-        Helios/Core/src/model/primitive_mesh.cpp
-        Helios/Core/include/shader/shader_program.hpp
-        Helios/Core/src/shader/shader_program.cpp
-        Helios/Core/src/utils.cpp
-        Helios/Core/include/shader/entity_shader.hpp
-        Helios/Core/include/model/materialized_mesh.hpp
-        Helios/Core/include/texture/texture.hpp
-        Helios/Core/include/texture/texture_manager.hpp
-        Helios/Core/include/model/material.hpp
-        Helios/Core/src/texture/texture_manager.cpp
-        Helios/Core/include/entity.hpp
-        Helios/Core/include/transformable.hpp
-        Helios/Core/include/renderer/entity_renderer.hpp
-        Helios/Core/src/renderer/entity_renderer.cpp
-        Helios/Core/include/renderer/light_renderer.hpp
-        Helios/Core/include/shader/light_shader.hpp
-        Helios/Core/include/light.hpp
-        Helios/Core/include/model/model.hpp
-        Helios/Core/src/model/model.cpp
+        Helios/Core/include/renderer/MasterRenderer.hpp
+        Helios/Core/src/renderer/MasterRenderer.cpp
+        Helios/Core/include/model/Mesh.hpp
+        Helios/Core/include/model/PrimitiveMesh.hpp
+        Helios/Core/include/Utils.hpp
+        Helios/Core/src/model/Mesh.cpp
+        Helios/Core/src/model/PrimitiveMesh.cpp
+        Helios/Core/include/shader/ShaderProgram.hpp
+        Helios/Core/src/shader/ShaderProgram.cpp
+        Helios/Core/src/Utils.cpp
+        Helios/Core/include/shader/EntityShader.hpp
+        Helios/Core/include/model/MaterializedMesh.hpp
+        Helios/Core/include/texture/Texture.hpp
+        Helios/Core/include/texture/TextureManager.hpp
+        Helios/Core/include/model/Material.hpp
+        Helios/Core/src/texture/TextureManager.cpp
+        Helios/Core/include/Entity.hpp
+        Helios/Core/include/Transformable.hpp
+        Helios/Core/include/renderer/EntityRenderer.hpp
+        Helios/Core/src/renderer/EntityRenderer.cpp
+        Helios/Core/include/renderer/LightRenderer.hpp
+        Helios/Core/include/shader/LightShader.hpp
+        Helios/Core/include/Light.hpp
+        Helios/Core/include/model/Model.hpp
+        Helios/Core/src/model/Model.cpp
 )
 
 target_link_libraries(HeliosCore OpenGL::GL ${LIBS})

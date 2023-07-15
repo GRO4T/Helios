@@ -1,7 +1,7 @@
 #pragma once
 
-#include "model/mesh.hpp"
-#include "utils.hpp"
+#include "Utils.hpp"
+#include "model/Mesh.hpp"
 
 namespace game_engine {
 

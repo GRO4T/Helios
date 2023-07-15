@@ -3,10 +3,10 @@
 #include <iostream>
 #include <vector>
 
-#include "model/material.hpp"
-#include "model/mesh.hpp"
-#include "texture/texture.hpp"
-#include "texture/texture_manager.hpp"
+#include "model/Material.hpp"
+#include "model/Mesh.hpp"
+#include "texture/Texture.hpp"
+#include "texture/TextureManager.hpp"
 
 namespace game_engine {
 

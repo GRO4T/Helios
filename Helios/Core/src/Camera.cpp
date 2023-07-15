@@ -1,8 +1,8 @@
-#include "camera.hpp"
+#include "Camera.hpp"
 
 #include <iostream>
 
-#include "display_manager.hpp"
+#include "DisplayManager.hpp"
 
 namespace game_engine {
 

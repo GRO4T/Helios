@@ -1,4 +1,4 @@
-#include "model/model.hpp"
+#include "model/Model.hpp"
 
 namespace game_engine {
 

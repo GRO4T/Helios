@@ -1,6 +1,6 @@
-#include "renderer/entity_renderer.hpp"
+#include "renderer/EntityRenderer.hpp"
 
-#include "utils.hpp"
+#include "Utils.hpp"
 
 namespace game_engine {
 

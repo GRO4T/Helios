@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "transformable.hpp"
+#include "Transformable.hpp"
 
 namespace game_engine {
 

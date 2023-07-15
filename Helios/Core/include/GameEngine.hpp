@@ -1,9 +1,9 @@
 #pragma once
 
-#include <renderer/master_renderer.hpp>
+#include <renderer/MasterRenderer.hpp>
 
-#include "display_manager.hpp"
-#include "utils.hpp"
+#include "DisplayManager.hpp"
+#include "Utils.hpp"
 
 namespace game_engine {
 

@@ -1,4 +1,4 @@
-#include "texture/texture_manager.hpp"
+#include "texture/TextureManager.hpp"
 
 namespace game_engine {
 

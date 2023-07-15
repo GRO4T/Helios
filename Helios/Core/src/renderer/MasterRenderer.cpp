@@ -1,6 +1,6 @@
-#include "renderer/master_renderer.hpp"
+#include "renderer/MasterRenderer.hpp"
 
-#include <utils.hpp>
+#include <Utils.hpp>
 
 namespace game_engine {
 

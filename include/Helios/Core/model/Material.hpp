@@ -1,0 +1,46 @@
+#pragma once
+
+#include <iostream>
+#include <vector>
+
+#include "Helios/Core/texture/Texture.hpp"
+#include "Helios/Core/texture/TextureManager.hpp"
+#include "opengl_includes.hpp"
+
+namespace helios {
+
+class Material {
+ public:
+  glm::vec3 ambient;
+  std::vector<TextureSPtr> diffuse_maps;
+  glm::vec3 diffuse;
+  std::vector<TextureSPtr> specular_maps;
+  glm::vec3 specular;
+  float shininess;
+};
+
+using MaterialSharedPtr = std::shared_ptr<Material>;
+
+namespace material {
+
+struct Gold : public Material {
+  Gold() {
+    ambient = glm::vec3(0.24725, 0.1995, 0.0745);
+    diffuse = glm::vec3(0.75164, 0.60648, 0.22648);
+    specular = glm::vec3(0.628281, 0.555802, 0.366065);
+    shininess = 51.2f;
+  }
+};
+
+struct Silver : public Material {
+  Silver() {
+    ambient = glm::vec3(0.19225, 0.19225, 0.19225);
+    diffuse = glm::vec3(0.50754, 0.50754, 0.50754);
+    specular = glm::vec3(0.508273, 0.508273, 0.508273);
+    shininess = 51.2f;
+  }
+};
+
+}  // namespace material
+
+}  // namespace helios

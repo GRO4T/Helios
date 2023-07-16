@@ -30,47 +30,47 @@ elseif (WIN32)
     set(LIBS glfw3 glew32s assimp-vc142-mt)
 endif ()
 
-include_directories(Helios/Core/include)
+include_directories(include)
 include_directories(lib/common/include)
 
 add_library(
         HeliosCore
-        Helios/Core/include/Camera.hpp
-        Helios/Core/src/Camera.cpp
-        Helios/Core/include/DisplayManager.hpp
-        Helios/Core/src/DisplayManager.cpp
-        Helios/Core/include/GameEngine.hpp
-        Helios/Core/src/stb_image.cpp
-        Helios/Core/include/renderer/MasterRenderer.hpp
-        Helios/Core/src/renderer/MasterRenderer.cpp
-        Helios/Core/include/model/Mesh.hpp
-        Helios/Core/include/model/PrimitiveMesh.hpp
-        Helios/Core/include/Utils.hpp
-        Helios/Core/src/model/Mesh.cpp
-        Helios/Core/src/model/PrimitiveMesh.cpp
-        Helios/Core/include/shader/ShaderProgram.hpp
-        Helios/Core/src/shader/ShaderProgram.cpp
-        Helios/Core/src/Utils.cpp
-        Helios/Core/include/shader/EntityShader.hpp
-        Helios/Core/include/model/MaterializedMesh.hpp
-        Helios/Core/include/texture/Texture.hpp
-        Helios/Core/include/texture/TextureManager.hpp
-        Helios/Core/include/model/Material.hpp
-        Helios/Core/src/texture/TextureManager.cpp
-        Helios/Core/include/Entity.hpp
-        Helios/Core/include/Transformable.hpp
-        Helios/Core/include/renderer/EntityRenderer.hpp
-        Helios/Core/src/renderer/EntityRenderer.cpp
-        Helios/Core/include/renderer/LightRenderer.hpp
-        Helios/Core/include/shader/LightShader.hpp
-        Helios/Core/include/Light.hpp
-        Helios/Core/include/model/Model.hpp
-        Helios/Core/src/model/Model.cpp
+        include/Helios/Core/Camera.hpp
+        include/Helios/Core/DisplayManager.hpp
+        include/Helios/Core/Entity.hpp
+        include/Helios/Core/Light.hpp
+        include/Helios/Core/Transformable.hpp
+        include/Helios/Core/Utils.hpp
+        include/Helios/Core/model/Material.hpp
+        include/Helios/Core/model/MaterializedMesh.hpp
+        include/Helios/Core/model/Mesh.hpp
+        include/Helios/Core/model/Model.hpp
+        include/Helios/Core/model/PrimitiveMesh.hpp
+        include/Helios/Core/renderer/EntityRenderer.hpp
+        include/Helios/Core/renderer/LightRenderer.hpp
+        include/Helios/Core/renderer/MasterRenderer.hpp
+        include/Helios/Core/shader/EntityShader.hpp
+        include/Helios/Core/shader/LightShader.hpp
+        include/Helios/Core/shader/ShaderProgram.hpp
+        include/Helios/Core/texture/Texture.hpp
+        include/Helios/Core/texture/TextureManager.hpp
+        src/Helios/Core/Camera.cpp
+        src/Helios/Core/DisplayManager.cpp
+        src/Helios/Core/GameEngine.cpp
+        src/Helios/Core/Utils.cpp
+        src/Helios/Core/model/Mesh.cpp
+        src/Helios/Core/model/Model.cpp
+        src/Helios/Core/model/PrimitiveMesh.cpp
+        src/Helios/Core/renderer/EntityRenderer.cpp
+        src/Helios/Core/renderer/MasterRenderer.cpp
+        src/Helios/Core/shader/ShaderProgram.cpp
+        src/Helios/Core/stb_image.cpp
+        src/Helios/Core/texture/TextureManager.cpp
 )
 
 target_link_libraries(HeliosCore OpenGL::GL ${LIBS})
 
-add_executable(Sandbox Helios/Core/src/main.cpp)
+add_executable(Sandbox examples/Sandbox/main.cpp)
 target_link_libraries(Sandbox HeliosCore)
 
 # copy /res folder

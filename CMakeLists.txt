@@ -6,6 +6,7 @@ set(CMAKE_BUILD_TYPE Release)
 project(HeliosCore)
 
 if (UNIX)
+    message(STATUS "Compiling for UNIX platform")
     if (POLICY CMP0072)
         cmake_policy(SET CMP0072 NEW)
     endif ()
@@ -13,6 +14,7 @@ if (UNIX)
     set(LIBS glfw GLEW assimp)
     message(STATUS "Compiling for Linux 64bit")
 elseif (WIN32)
+    message(STATUS "Compiling for WIN32 platform")
     add_link_options(/NODEFAULTLIB:LIBCMT) # https://stackoverflow.com/questions/3007312/resolving-lnk4098-defaultlib-msvcrt-conflicts-with
 
     find_package(OpenGL REQUIRED)
